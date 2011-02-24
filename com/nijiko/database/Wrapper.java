@@ -6,7 +6,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
+//import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -100,7 +100,7 @@ public class Wrapper {
      * @throws SQLException
      */
     private Connection connection() throws ClassNotFoundException, SQLException {
-	if (this.database.equals(database.SQLITE)) {
+	if (this.database.equals(Type.SQLITE)) {
 	    Class.forName("org.sqlite.JDBC");
 	    this.connection = DriverManager.getConnection(this.db);
 	} else {

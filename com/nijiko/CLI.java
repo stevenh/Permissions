@@ -25,7 +25,7 @@ public class CLI {
     public CLI() {
         this.commands = new LinkedHashMap<String, Object[]>();
         this.arguments = new LinkedHashMap<String, Object>();
-        this.mapping = new Object[]{};
+        this.setMapping(new Object[]{});
     }
 
     public void add(String command, String help) {
@@ -34,9 +34,9 @@ public class CLI {
 
     public void save(String message) {
         this.arguments = new LinkedHashMap<String, Object>();
-        this.mapping = new Object[]{};
+        this.setMapping(new Object[]{});
 
-        this.message = message;
+        this.setMessage(message);
         this.message_split = message.split(SPLIT);
     }
 
@@ -46,8 +46,8 @@ public class CLI {
         }
 
         for (String command : commands.keySet()) {
-            ArrayList<Object> container = new ArrayList<Object>();
-            Object[] objects = new Object[]{};
+            //ArrayList<Object> container = new ArrayList<Object>();
+            //Object[] objects = new Object[]{};
             Object[] data = commands.get(command);
             String[] command_split = (String[]) data[0];
             int location = 0;
@@ -90,8 +90,8 @@ public class CLI {
         }
 
         for (String command : commands.keySet()) {
-            ArrayList<Object> container = new ArrayList<Object>();
-            Object[] objects = new Object[]{};
+            //ArrayList<Object> container = new ArrayList<Object>();
+           // Object[] objects = new Object[]{};
             Object[] data = commands.get(command);
             String[] command_split = (String[]) data[0];
             int location = 0;
@@ -221,7 +221,7 @@ public class CLI {
             }
         }
 
-        return new ArrayList(arguments.values());
+        return new ArrayList<Object>(arguments.values());
     }
 
     public Object getValue(String argument) {
@@ -263,9 +263,30 @@ public class CLI {
         return (this.arguments.containsKey(argument)) ? Boolean.parseBoolean(String.valueOf(this.arguments.get(argument))) : false;
     }
 
-    public class InvalidSyntaxException extends Exception {
+    public void setMapping(Object[] mapping) {
+		this.mapping = mapping;
+	}
 
-        public InvalidSyntaxException(String message) {
+	public Object[] getMapping() {
+		return mapping;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public class InvalidSyntaxException extends Exception {
+
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = -6093333184988825188L;
+
+		public InvalidSyntaxException(String message) {
             super(message);
         }
     }

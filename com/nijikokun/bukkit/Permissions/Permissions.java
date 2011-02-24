@@ -11,7 +11,7 @@ import com.nijiko.configuration.ConfigurationHandler;
 import com.nijiko.configuration.DefaultConfiguration;
 import com.nijiko.permissions.Control;
 import com.nijiko.permissions.PermissionHandler;
-import java.util.ArrayList;
+//import java.util.ArrayList;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
@@ -48,8 +48,8 @@ public class Permissions extends JavaPlugin {
      * Central Data pertaining directly to the plugin name & versioning.
      */
     public static String name = "Permissions";
-    public static String codename = "Handler";
-    public static String version = "2.1";
+    public static String codename = "Phoenix";
+    public static String version = "2.2";
     /**
      * Controller for permissions and security.
      */
@@ -76,7 +76,7 @@ public class Permissions extends JavaPlugin {
     private String DefaultWorld = "";
 
     public void onDisable() {
-        log.info("[" + name + "] version [" + version + "] (" + codename + ") fukkin died okay");
+        log.info("[" + name + "] version [" + version + "] (" + codename + ") disabled successfully.");
     }
 
     public void onEnable() {
@@ -88,7 +88,7 @@ public class Permissions extends JavaPlugin {
 
         // Attempt
         if (!(new File(getDataFolder(), DefaultWorld + ".yml").exists())) {
-            Misc.touch(DefaultWorld + ".yml");
+            com.nijiko.Misc.touch(DefaultWorld + ".yml");
         }
 
         // Gogo
@@ -127,7 +127,7 @@ public class Permissions extends JavaPlugin {
      * @return PermissionHandler
      */
     public PermissionHandler getHandler() {
-        return this.Security;
+        return Permissions.Security;
     }
 
     public void setupPermissions() {
@@ -143,7 +143,7 @@ public class Permissions extends JavaPlugin {
         private CLI Commands;
 
         public Listener(Permissions plugin) {
-            this.plugin = plugin;
+            this.setPlugin(plugin);
 
             this.Commands = new CLI();
             Commands.add("/pr|perms", "Reload Permissions.");
@@ -162,15 +162,17 @@ public class Permissions extends JavaPlugin {
             Commands.save(message);
 
             // Parsing / Checks
+            
             String base = Commands.base();
             String command = Commands.command();
-            ArrayList<Object> variables = Commands.parse();
+            //ArrayList<Object> variables = Commands.parse();
 
             if (base != null) {
-                if (Misc.isEither(base, "pr", "perms")) {
+                if (com.nijiko.Misc.isEither(base, "pr", "perms")) {
+                	
                     if (command == null) {
                         Messaging.send("&7-------[ &fPermissions&7 ]-------");
-                        Messaging.send("&7Currently running version: &f" + version);
+                        Messaging.send("&7Currently running version: &f[" + version + "] (" + codename + ")");
 
                         if (Security.permission(player, "permissions.reload")) {
                             Messaging.send("&7Reload with: &f/pr reload");
@@ -178,8 +180,8 @@ public class Permissions extends JavaPlugin {
 
                         Messaging.send("&7-------[ &fPermissions&7 ]-------");
                     }
-
-                    if(Misc.isEither(command, "reload", "-r")) {
+                    
+                    if(com.nijiko.Misc.isEither(command, "reload", "-r")) {
                         if (Security.permission(player, "permissions.reload")) {
                             Security.reload();
                             player.sendMessage(ChatColor.GRAY + "[Permissions] Reload completed.");
@@ -188,5 +190,13 @@ public class Permissions extends JavaPlugin {
                 }
             }
         }
+
+		public void setPlugin(Permissions plugin) {
+			this.plugin = plugin;
+		}
+
+		public Permissions getPlugin() {
+			return plugin;
+		}
     }
 }

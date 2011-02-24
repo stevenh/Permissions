@@ -147,12 +147,12 @@ public class Control extends PermissionHandler {
         List<String> groupKeys = config.getKeys("groups");
 
         // Permission set.
-        Set Permissions = new HashSet();
-        Set Inheritance = new HashSet();
+        Set<String> Permissions = new HashSet<String>();
+        Set<String> Inheritance = new HashSet<String>();
 
         // Permission list
-        List permissions;
-        List inheritance;
+        List<String> permissions;
+        List<String> inheritance;
 
         // Group
         String group;
@@ -161,8 +161,8 @@ public class Control extends PermissionHandler {
         // log.info("User keys for world: " + world + " - " + new ArrayList<String>(groupKeys).toString());
         if (groupKeys != null) {
             for (String key : groupKeys) {
-                Inheritance = new HashSet();
-                Permissions = new HashSet();
+                Inheritance = new HashSet<String>();
+                Permissions = new HashSet<String>();
 
                 // Configuration
                 inheritance = config.getStringList("groups." + key + ".inheritance", null);
@@ -200,7 +200,7 @@ public class Control extends PermissionHandler {
         // log.info("User keys for world: " + world + " - " + new ArrayList<String>(userKeys).toString());
         if (userKeys != null) {
             for (String key : userKeys) {
-                Permissions = new HashSet();
+                Permissions = new HashSet<String>();
 
                 // Configuration
                 permissions = config.getStringList("users." + key + ".permissions", null);
@@ -223,7 +223,7 @@ public class Control extends PermissionHandler {
         }
     }
 
-    private String toArrayListString(Collection variable) {
+    private String toArrayListString(Collection<String> variable) {
         return new ArrayList<String>(variable).toString();
     }
 
@@ -257,9 +257,9 @@ public class Control extends PermissionHandler {
      * @return boolean
      */
     public boolean permission(Player player, String permission) {
-        Set<String> Permissions = new HashSet();
-        Set<String> GroupPermissions = new HashSet();
-        Set<String> GroupInheritedPermissions = new HashSet();
+        Set<String> Permissions = new HashSet<String>();
+        Set<String> GroupPermissions = new HashSet<String>();
+        Set<String> GroupInheritedPermissions = new HashSet<String>();
         String group = "";
         String name = player.getName().toLowerCase();
         String world = player.getWorld().getName();
@@ -292,24 +292,31 @@ public class Control extends PermissionHandler {
         // log.info("Checking for the node " + permission + " in the world: " + world);
 
         if (this.WorldUserPermissions.get(world).containsKey(name)) {
-            Permissions = (Set<String>) UserPermissions.get(name);
-            group = ((String) UserGroups.get(name)).toLowerCase();
+            Permissions = UserPermissions.get(name);
+            group = UserGroups.get(name).toLowerCase();
 
             // log.info("User group:" + group);
             // log.info("User Permissions: " + (new ArrayList<String>(Permissions)).toString());
 
             if (!Groups.isEmpty() || Groups != null) {
                 if (Groups.containsKey(group)) {
-                    GroupPermissions = (Set<String>) Groups.get(group);
+                    GroupPermissions = Groups.get(group);
                 }
 
                 if (GroupsInheritance.containsKey(group)) {
                     GroupInheritedPermissions = getInheritancePermissions(world, group);
                 }
-            } else {
+            } /*else {
                 Cached.put(name + "," + permission, false);
                 return false;
             }
+            Eclipse is stating that this is dead code.
+            I do not want to completely remove it until
+            I am sure what it actually does or if it is
+            indead dead code.
+            
+            The Yeti
+            */
         } else {
             if ((base == null ? "" == null : base.equals(""))) {
                 Cached.put(name + "," + permission, false);
@@ -320,16 +327,23 @@ public class Control extends PermissionHandler {
 
             if (!Groups.isEmpty() || Groups != null) {
                 if (Groups.containsKey(group)) {
-                    GroupPermissions = (Set<String>) Groups.get(group);
+                    GroupPermissions = Groups.get(group);
                 }
 
                 if (GroupsInheritance.containsKey(group)) {
                     GroupInheritedPermissions = getInheritancePermissions(world, group);
                 }
-            } else {
+            } /*else {
                 Cached.put(name + "," + permission, false);
                 return false;
             }
+            Eclipse is stating that this is dead code.
+            I do not want to completely remove it until
+            I am sure what it actually does or if it is
+            indead dead code.
+            
+            The Yeti
+            */
         }
 
         StringTokenizer globalized = new StringTokenizer(permission, ".");
@@ -407,7 +421,7 @@ public class Control extends PermissionHandler {
         if (Inheritance.size() > 0) {
             for (String inherited : Inheritance) {
                 inherited = inherited.toLowerCase();
-                Set<String> GroupPermissions = (Set<String>) Groups.get(inherited.toLowerCase());
+                Set<String> GroupPermissions = Groups.get(inherited.toLowerCase());
                 Set<String> GottenInheritance = getInheritance(world, inherited);
 
                 if (GroupPermissions == null) {
@@ -428,7 +442,7 @@ public class Control extends PermissionHandler {
                 }
             }
         } else {
-            Set<String> GroupPermissions = (Set<String>) Groups.get(group);
+            Set<String> GroupPermissions = Groups.get(group);
 
             if (GroupPermissions.size() > 0) {
                 Permissions.addAll(GroupPermissions);
@@ -441,14 +455,14 @@ public class Control extends PermissionHandler {
     private Set<String> getInheritancePermissions(String world, String group) {
         group = group.toLowerCase();
         Map<String, Set<String>> Groups = this.WorldGroups.get(world);
-        Set<String> Permissions = new HashSet();
+        Set<String> Permissions = new HashSet<String>();
         Set<String> Inheritance = getInheritance(world, group);
-        Set<String> Checked = new HashSet();
+        Set<String> Checked = new HashSet<String>();
 
         if (Inheritance.size() > 0 && !Inheritance.isEmpty()) {
             for (String inherited : Inheritance) {
                 inherited = inherited.toLowerCase();
-                Set<String> GroupPermissions = (Set<String>) Groups.get(inherited);
+                Set<String> GroupPermissions = Groups.get(inherited);
 
                 if (GroupPermissions == null) {
                     continue;
@@ -958,7 +972,7 @@ public class Control extends PermissionHandler {
         String userPermission = this.getUserPermissionString(world, name, permission);
         String userGroupPermission = "";
 
-        if (group != null || !group.isEmpty()) {
+        if (group != null /*|| !group.isEmpty()*/) {
             userGroupPermission = this.getGroupPermissionString(world, group, permission);
         }
 
@@ -982,7 +996,7 @@ public class Control extends PermissionHandler {
         boolean userPermission = this.getUserPermissionBoolean(world, name, permission);
         boolean userGroupPermission = false;
 
-        if (group != null || !group.isEmpty()) {
+        if (group != null /*|| !group.isEmpty()*/) {
             userGroupPermission = this.getGroupPermissionBoolean(world, group, permission);
         }
 
@@ -1006,7 +1020,7 @@ public class Control extends PermissionHandler {
         int userPermission = this.getUserPermissionInteger(world, name, permission);
         int userGroupPermission = -1;
 
-        if (group != null || !group.isEmpty()) {
+        if (group != null /*|| !group.isEmpty()*/) {
             userGroupPermission = this.getGroupPermissionInteger(world, group, permission);
         }
 
@@ -1030,7 +1044,7 @@ public class Control extends PermissionHandler {
         double userPermission = this.getUserPermissionDouble(world, name, permission);
         double userGroupPermission = -1.0;
 
-        if (group != null || !group.isEmpty()) {
+        if (group != null /*|| !group.isEmpty()*/) {
             userGroupPermission = this.getGroupPermissionDouble(world, group, permission);
         }
 
