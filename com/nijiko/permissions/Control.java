@@ -94,6 +94,7 @@ public class Control extends PermissionHandler {
     
     public void forceLoadWorld(String world) {
         this.load(world, new Configuration(new File(directory + File.separator + world + ".yml")));
+        log.info("Reloaded world");
     }
 
     public boolean checkWorld(String world) {
@@ -306,17 +307,11 @@ public class Control extends PermissionHandler {
                 if (GroupsInheritance.containsKey(group)) {
                     GroupInheritedPermissions = getInheritancePermissions(world, group);
                 }
-            } /*else {
+            } else {
                 Cached.put(name + "," + permission, false);
                 return false;
             }
-            Eclipse is stating that this is dead code.
-            I do not want to completely remove it until
-            I am sure what it actually does or if it is
-            indead dead code.
-            
-            The Yeti
-            */
+
         } else {
             if ((base == null ? "" == null : base.equals(""))) {
                 Cached.put(name + "," + permission, false);
@@ -333,17 +328,10 @@ public class Control extends PermissionHandler {
                 if (GroupsInheritance.containsKey(group)) {
                     GroupInheritedPermissions = getInheritancePermissions(world, group);
                 }
-            } /*else {
+            } else {
                 Cached.put(name + "," + permission, false);
                 return false;
             }
-            Eclipse is stating that this is dead code.
-            I do not want to completely remove it until
-            I am sure what it actually does or if it is
-            indead dead code.
-            
-            The Yeti
-            */
         }
 
         StringTokenizer globalized = new StringTokenizer(permission, ".");
@@ -1020,7 +1008,7 @@ public class Control extends PermissionHandler {
         int userPermission = this.getUserPermissionInteger(world, name, permission);
         int userGroupPermission = -1;
 
-        if (group != null /*|| !group.isEmpty()*/) {
+        if (group != null || !group.isEmpty()) {
             userGroupPermission = this.getGroupPermissionInteger(world, group, permission);
         }
 

@@ -1,3 +1,13 @@
 name: Permissions
 main: com.nijikokun.bukkit.Permissions.Permissions
 version: 2.2
+author: TheNo1Yeti
+website: www.theyeticave.net
+commands:
+  permissions:
+    description: Provides access to Permissions commands and information.
+    usage: |
+           /<command>
+           Example: /<command> | Displays Permissions Info
+           Example: /<command> -reload | Reloads the default world configuration
+           Example: /<command> -reload [world] | Reloads the [world] configuration file

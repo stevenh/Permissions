@@ -1,24 +1,22 @@
 package com.nijikokun.bukkit.Permissions;
 
-import com.nijiko.CLI;
 import com.nijiko.Messaging;
 import com.nijiko.Misc;
 import java.io.File;
 import java.util.logging.Logger;
 import org.bukkit.Server;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.nijiko.configuration.ConfigurationHandler;
 import com.nijiko.configuration.DefaultConfiguration;
 import com.nijiko.permissions.Control;
 import com.nijiko.permissions.PermissionHandler;
-//import java.util.ArrayList;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
-import org.bukkit.event.player.PlayerChatEvent;
-import org.bukkit.event.player.PlayerListener;
 import org.bukkit.util.config.Configuration;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 
 /**
  * Permissions 1.x & Code from iConomy 2.x
@@ -38,48 +36,33 @@ import org.bukkit.util.config.Configuration;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 public class Permissions extends JavaPlugin {
-    /*
-     * Loggery Foggery
-     */
 
-    public static final Logger log = Logger.getLogger("Minecraft");
-
-    /*
-     * Central Data pertaining directly to the plugin name & versioning.
-     */
+    public static Logger log = Logger.getLogger("Minecraft");
+    public static PluginDescriptionFile description;
+    public static Plugin instance;
+    public static Server Server;
+    private DefaultConfiguration config;
     public static String name = "Permissions";
     public static String codename = "Phoenix";
     public static String version = "2.2";
+
     /**
      * Controller for permissions and security.
      */
     public static PermissionHandler Security;
-    /**
-     * Controller for permissions and security.
-     */
-    private Listener Listener = new Listener(this);
+
     /**
      * Miscellaneous object for various functions that don't belong anywhere else
      */
     public static Misc Misc = new Misc();
 
-    /*
-     * Internal Properties controllers
-     */
-    private DefaultConfiguration config;
-
-    /*
-     * Server
-     */
-    public static Server Server = null;
-
     private String DefaultWorld = "";
 
-    public void onDisable() {
-        log.info("[" + name + "] version [" + version + "] (" + codename + ") disabled successfully.");
-    }
-
     public void onEnable() {
+    	instance = this;
+    	Server = this.getServer();
+    	description = this.getDescription();
+    	
         // Start Registration
         getDataFolder().mkdirs();
 
@@ -100,21 +83,17 @@ public class Permissions extends JavaPlugin {
         // Load Configuration Settings
         this.config.load();
 
-        // Server
-        Server = getServer();
-
-        // Register
-        registerEvents();
-
         // Setup Permission
         setupPermissions();
 
         // Enabled
-        log.info("[" + name + "] version [" + version + "] (" + codename + ") loaded");
+        PluginDescriptionFile pdfFile = this.getDescription();
+        log.info("[" + pdfFile.getName() + "] version [" + pdfFile.getVersion() + "] (" + codename + ")  loaded");
     }
 
-    private void registerEvents() {
-        this.getServer().getPluginManager().registerEvent(Type.PLAYER_COMMAND, Listener, Priority.Monitor, this);
+    public void onDisable() {
+    	PluginDescriptionFile pdfFile = this.getDescription();
+    	log.info("[" + pdfFile.getName() + "] version [" + pdfFile.getVersion() + "] (" + codename + ") disabled successfully.");
     }
 
     /**
@@ -137,66 +116,44 @@ public class Permissions extends JavaPlugin {
         Security.load();
     }
 
-    private class Listener extends PlayerListener {
-
-        private Permissions plugin;
-        private CLI Commands;
-
-        public Listener(Permissions plugin) {
-            this.setPlugin(plugin);
-
-            this.Commands = new CLI();
-            Commands.add("/pr|perms", "Reload Permissions.");
-            Commands.add("/pr|perms -reload|-r", "Reload Permissions.");
+    public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
+        Player player = null;
+        String[] tArgs = args;
+        String commandName = command.getName().toLowerCase();
+        
+        if (sender instanceof Player) {
+        	player = (Player)sender;
+        	if (!Security.permission(player, "permissions")) {
+        		player.sendMessage("You lack sufficient permissions to do that");
+        		return true;
+        	}
         }
+    	Messaging.save(player);
 
-        @Override
-        public void onPlayerCommand(PlayerChatEvent event) {
-            final Player player = event.getPlayer();
-            String message = event.getMessage();
+        if (commandName.compareToIgnoreCase("permissions") == 0) {
+        	if (tArgs.length < 1) {
+        		Messaging.send("&7-------[ &fPermissions&7 ]-------");
+                Messaging.send("&7Currently running version: &f[" + version + "] (" + codename + ")");
 
-            // Save player.
-            Messaging.save(player);
-
-            // Commands
-            Commands.save(message);
-
-            // Parsing / Checks
-            
-            String base = Commands.base();
-            String command = Commands.command();
-            //ArrayList<Object> variables = Commands.parse();
-
-            if (base != null) {
-                if (com.nijiko.Misc.isEither(base, "pr", "perms")) {
-                	
-                    if (command == null) {
-                        Messaging.send("&7-------[ &fPermissions&7 ]-------");
-                        Messaging.send("&7Currently running version: &f[" + version + "] (" + codename + ")");
-
-                        if (Security.permission(player, "permissions.reload")) {
-                            Messaging.send("&7Reload with: &f/pr reload");
-                        }
-
-                        Messaging.send("&7-------[ &fPermissions&7 ]-------");
-                    }
-                    
-                    if(com.nijiko.Misc.isEither(command, "reload", "-r")) {
-                        if (Security.permission(player, "permissions.reload")) {
-                            Security.reload();
-                            player.sendMessage(ChatColor.GRAY + "[Permissions] Reload completed.");
-                        }
-                    }
+                if (Security.permission(player, "permissions.reload")) {
+                	Messaging.send("&7Reload with: &f/permissions -reload [World]");
+                	Messaging.send("&fLeave [World] blank to reload default world.");
                 }
+
+                Messaging.send("&7-------[ &fPermissions&7 ]-------");
+                return true;
             }
-        }
-
-		public void setPlugin(Permissions plugin) {
-			this.plugin = plugin;
-		}
-
-		public Permissions getPlugin() {
-			return plugin;
-		}
+                    
+            if (tArgs[0].compareToIgnoreCase("-reload") == 0) {
+            	if (tArgs.length < 2) {
+            		if (Security.permission(player, "permissions.reload")) {
+            			Security.reload();
+            			}
+            		player.sendMessage(ChatColor.GRAY + "[Permissions] Default World Reload completed.");
+            		return true;
+            		}
+            	}
+            }
+        return false;
     }
 }
