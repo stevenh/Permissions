@@ -9,5 +9,5 @@ commands:
     usage: |
            /<command>
            Example: /<command> | Displays Permissions Info
-           Example: /<command> -reload | Reloads the default world configuration
+           Example: /<command> -reload all | Reloads the default world configuration
            Example: /<command> -reload [world] | Reloads the [world] configuration file

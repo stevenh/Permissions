@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -65,10 +66,30 @@ public class Control extends PermissionHandler {
 
     public void reload() {
         this.clearAllCache();
-
-        for(String world : Worlds) {
-            this.forceLoadWorld(world);
+        
+        final List<String> w = new LinkedList<String>(Worlds);
+        Worlds = new LinkedList<String>();
+        
+        synchronized (w) {
+        	for (Iterator<String> it = w.iterator(); it.hasNext();) {
+        		String world = it.next();
+        		this.forceLoadWorld(world);
+        	}
         }
+    }
+    
+    public boolean reload(String world) {
+    	if (this.Worlds.contains(world)) {
+    		this.clearCache(world);
+    		
+    		synchronized (Worlds) {
+    			this.Worlds.remove(world);
+    		}
+    		
+    		this.forceLoadWorld(world);
+    		return true;
+    	}
+    	return false;
     }
     
     public void setDefaultWorld(String world) {
@@ -83,7 +104,7 @@ public class Control extends PermissionHandler {
     public boolean loadWorld(String world) {
         // log.info("Checking for the world: " + world);
         if(!this.Worlds.contains(world)) {
-            this.load(world, new Configuration(new File(directory + File.separator + world + ".yml")));
+            this.load(world, new Configuration(new File(this.directory + File.separator + world + ".yml")));
             log.info("Loaded world: " + world);
            return true;
         }
@@ -93,8 +114,7 @@ public class Control extends PermissionHandler {
     }
     
     public void forceLoadWorld(String world) {
-        this.load(world, new Configuration(new File(directory + File.separator + world + ".yml")));
-        log.info("Reloaded world");
+        this.load(world, new Configuration(new File(this.directory + File.separator + world + ".yml")));
     }
 
     public boolean checkWorld(String world) {
@@ -114,8 +134,8 @@ public class Control extends PermissionHandler {
     }
 
     public void load(String world, Configuration config) {
-        if (!(new File(directory + File.pathSeparator + world + ".yml").exists())) {
-            FileManager file = new FileManager(directory.getPath() + File.separator, world + ".yml", true);
+        if (!(new File(this.directory + File.pathSeparator + world + ".yml").exists())) {
+            FileManager file = new FileManager(this.directory.getPath() + File.separator, world + ".yml", true);
         }
 
         // log.info("Configuration file: " + directory.getPath() + File.separator + world + ".yml");

@@ -145,15 +145,37 @@ public class Permissions extends JavaPlugin {
             }
                     
             if (tArgs[0].compareToIgnoreCase("-reload") == 0) {
-            	if (tArgs.length < 2) {
-            		if (Security.permission(player, "permissions.reload")) {
-            			Security.reload();
+            	if (tArgs.length == 2) {
+            		if (tArgs[1].compareToIgnoreCase("all") == 0) {
+            			if (Security.permission(player, "permissions.reload")) {
+            				Security.reload();
+            				player.sendMessage(ChatColor.GRAY + "[Permissions] Default World Reload completed.");
+                			return true;
             			}
-            		player.sendMessage(ChatColor.GRAY + "[Permissions] Default World Reload completed.");
-            		return true;
+            			else {
+            				player.sendMessage(ChatColor.RED + "[Permissions] You lack the necessary permissions to perform this action.");
+            				return true;
+            			}
             		}
+            		else {
+            			if (Security.permission(player, "permissions.reload")) {
+            				String world = tArgs[1];
+            				if (Security.reload(world)) {
+            					player.sendMessage(ChatColor.GRAY + "[Permissions] " + tArgs[1] + " World Reload completed.");
+            				}
+            				else {
+            					Messaging.send("&7[Permissions] " + world + " does not exist.");
+            				}
+                			return true;
+            			}
+            			else {
+            				player.sendMessage(ChatColor.RED + "[Permissions] You lack the necessary permissions to permform this action.");
+            				return true;
+            			}
+            		} 
             	}
             }
+        }
         return false;
     }
 }
