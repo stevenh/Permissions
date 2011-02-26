@@ -1,6 +1,7 @@
 package com.nijiko;
 
-import com.nijikokun.bukkit.Permissions.Permissions;
+import com.nijikokun.Permissions.Permissions;
+
 import java.io.File;
 import java.io.IOException;
 import org.bukkit.entity.Player;

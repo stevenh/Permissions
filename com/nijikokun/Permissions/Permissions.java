@@ -1,4 +1,4 @@
-package com.nijikokun.bukkit.Permissions;
+package com.nijikokun.Permissions;
 
 import com.nijiko.Messaging;
 import com.nijiko.Misc;

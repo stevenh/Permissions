@@ -1,7 +1,7 @@
 /*
  * Something to manage a simple file.
  */
-package com.nijikokun.bukkit.Permissions;
+package com.nijikokun.Permissions;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
