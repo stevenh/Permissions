@@ -103,7 +103,7 @@ public class Permissions extends JavaPlugin {
     }
 
     public void setupPermissions() {
-        Security = new Control(new Configuration(new File(getDataFolder(), DefaultWorld + ".yml")));
+        Security = new Control(new Configuration(new File("plugins" + File.separator + "Permissions", DefaultWorld + ".yml")));
         Security.setDefaultWorld(DefaultWorld);
         Security.setDirectory(new File("plugins" + File.separator + "Permissions"));
         Security.load();
