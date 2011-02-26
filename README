@@ -1,6 +1,65 @@
-Continuation of Nijikokun's amazing Permissions system.  Unfortunately I am nowhere near as good of a developer or as seasoned
-with Java as he is so the work will be slow going.  Right now there are also several other developers all working on the same
-thing with everyone attempting to resurect this plugin and all of his others.  This constitutes my contributions to the effort.
+Permissions... Done right.
+Permissions allows plugin-authors to utalize a permission system that handles 
+group inheritance, globalized permission settings, and more. All the features 
+of a fine-grained permission system in one plugin.
 
-Please keep in mind I am still in the process of learning Java so some things may seem amateurish or not make sense.  Unfortunately
-most of my experience with Java is on smaller single user GUI applications that are nowhere near as robust as this.
+This is a continuation of the work that was originally done by Nijikokun.  All
+original credit goes to them as without their work this plugin would not have
+been possible.
+
+Features
+Groups
+Group Inheritance, Allows for groups to gain permissions from other groups.
+User Permission System
+Fine Grained Permission system.
+Allowing for Globalized permissions
+Easy to use, setup, and implement.
+Two cache layers, first from file to memory, then from memory to cache.
+Plugins can control cache since version 2.1
+And much more.
+For the users
+
+
+Permissions gives server admins great control, mostly in-game reloading. Simply use 
+/permissions -reload all and the file will be re-cached and never touched again until 
+you need to reload it. This allows you to quickly give your users the commands that 
+they need without having to restart the server.
+
+Installation for 2.0 down:
+Download the archive.
+Extract contents to the /plugins folder.
+Open up /plugins/Permissions/config.yml
+Read / modify.
+Save.
+Reload Server.
+
+Changelog
+2.3
+It seems that I may have gotten a bit over zealous with code cleanup
+Merged in the last of Nijikokuns code.
+
+2.2
+Developer change
+Fixed reloading of permissions configuration files
+Changed the commands to register with plugin.yml
+Moved command from onPlayerCommand to onCommand
+
+2.1
+Multiple-World support
+New cache layer, and cache control support for plugins
+Editing features for plugins to hook into
+Exempt nodes
+World copying
+2.0
+
+Forgot.
+1.9
+Fully fixes inheritance.
+Groups now inherit groups of groups that inherit groups of...
+Cache system implemented.
+Plugin authors can now delegate a variable system if needed.
+API Updated with two new functions to get the point of what they do across.
+Along with the new variable checks.
+1.8
+Fixes the broken globalized node issue.
+node.* is called a `globalized node`

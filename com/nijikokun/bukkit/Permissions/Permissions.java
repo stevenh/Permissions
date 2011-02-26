@@ -40,11 +40,11 @@ public class Permissions extends JavaPlugin {
     public static Logger log = Logger.getLogger("Minecraft");
     public static PluginDescriptionFile description;
     public static Plugin instance;
-    public static Server Server;
+    public static Server Server = null;
     private DefaultConfiguration config;
     public static String name = "Permissions";
     public static String codename = "Phoenix";
-    public static String version = "2.2";
+    public static String version = "2.3";
 
     /**
      * Controller for permissions and security.
@@ -57,6 +57,57 @@ public class Permissions extends JavaPlugin {
     public static Misc Misc = new Misc();
 
     private String DefaultWorld = "";
+
+    public Permissions() {
+        new File("plugins" + File.separator + "Permissions" + File.separator).mkdirs();
+
+        PropertyHandler server = new PropertyHandler("server.properties");
+        DefaultWorld = server.getString("level-name");
+
+        // Attempt
+        if (!(new File(getDataFolder(), DefaultWorld + ".yml").exists())) {
+            com.nijiko.Misc.touch(DefaultWorld + ".yml");
+        }
+
+        Configuration configure = new Configuration(new File(getDataFolder(), DefaultWorld + ".yml"));
+        configure.load();
+
+        // Gogo
+        this.config = new ConfigurationHandler(configure);
+
+        // Setup Permission
+        setupPermissions();
+
+        // Enabled
+        log.info("[" + name + "] version [" + version + "] (" + codename + ") was Initialized.");
+    }
+    
+
+    public void onDisable() {
+    	PluginDescriptionFile pdfFile = this.getDescription();
+    	log.info("[" + pdfFile.getName() + "] version [" + pdfFile.getVersion() + "] (" + codename + ") disabled successfully.");
+    	return;
+    }
+
+    /**
+     * Alternative method of grabbing Permissions.Security
+     * <br /><br />
+     * <blockquote><pre>
+     * Permissions.getHandler()
+     * </pre></blockquote>
+     *
+     * @return PermissionHandler
+     */
+    public PermissionHandler getHandler() {
+        return Permissions.Security;
+    }
+
+    public void setupPermissions() {
+        Security = new Control(new Configuration(new File(getDataFolder(), DefaultWorld + ".yml")));
+        Security.setDefaultWorld(DefaultWorld);
+        Security.setDirectory(new File("plugins" + File.separator + "Permissions"));
+        Security.load();
+    }
 
     public void onEnable() {
     	instance = this;
@@ -90,32 +141,7 @@ public class Permissions extends JavaPlugin {
         PluginDescriptionFile pdfFile = this.getDescription();
         log.info("[" + pdfFile.getName() + "] version [" + pdfFile.getVersion() + "] (" + codename + ")  loaded");
     }
-
-    public void onDisable() {
-    	PluginDescriptionFile pdfFile = this.getDescription();
-    	log.info("[" + pdfFile.getName() + "] version [" + pdfFile.getVersion() + "] (" + codename + ") disabled successfully.");
-    }
-
-    /**
-     * Alternative method of grabbing Permissions.Security
-     * <br /><br />
-     * <blockquote><pre>
-     * Permissions.getHandler()
-     * </pre></blockquote>
-     *
-     * @return PermissionHandler
-     */
-    public PermissionHandler getHandler() {
-        return Permissions.Security;
-    }
-
-    public void setupPermissions() {
-        Security = new Control(new Configuration(new File(getDataFolder(), DefaultWorld + ".yml")));
-        Security.setDefaultWorld(DefaultWorld);
-        Security.setDirectory(getDataFolder());
-        Security.load();
-    }
-
+    
     public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
         Player player = null;
         String[] tArgs = args;
@@ -123,7 +149,7 @@ public class Permissions extends JavaPlugin {
         
         if (sender instanceof Player) {
         	player = (Player)sender;
-        	if (!Security.permission(player, "permissions")) {
+        	if (!Security.permission(player, "permissions.info")) {
         		player.sendMessage("You lack sufficient permissions to do that");
         		return true;
         	}
