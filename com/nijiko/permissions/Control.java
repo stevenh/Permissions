@@ -1,7 +1,7 @@
 package com.nijiko.permissions;
 
 import com.nijiko.Messaging;
-import com.nijikokun.Permissions.FileManager;
+import com.nijikokun.bukkit.Permissions.FileManager;
 
 import java.io.File;
 import java.util.ArrayList;

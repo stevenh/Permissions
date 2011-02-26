@@ -34,6 +34,9 @@ Save.
 Reload Server.
 
 Changelog
+2.4
+Fixed setupPermissions()
+
 2.3
 It seems that I may have gotten a bit over zealous with code cleanup
 Merged in the last of Nijikokuns code.
