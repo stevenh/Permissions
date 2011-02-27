@@ -1,7 +1,5 @@
-package com.nijiko.permissions;
+package net.theyeticave.permissions;
 
-import com.nijiko.Messaging;
-import com.nijikokun.bukkit.Permissions.FileManager;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -15,6 +13,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
+
+import net.theyeticave.Messaging;
+import net.theyeticave.theyeti.Permissions.FileManager;
+
 import org.bukkit.entity.Player;
 import org.bukkit.util.config.Configuration;
 

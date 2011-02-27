@@ -1,4 +1,4 @@
-package com.nijiko;
+package net.theyeticave;
 
 import org.bukkit.entity.Player;
 

@@ -1,9 +1,11 @@
-package com.nijiko;
+package net.theyeticave;
 
-import com.nijikokun.bukkit.Permissions.Permissions;
 
 import java.io.File;
 import java.io.IOException;
+
+import net.theyeticave.theyeti.Permissions.Permissions;
+
 import org.bukkit.entity.Player;
 
 /**

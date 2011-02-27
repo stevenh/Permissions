@@ -1,4 +1,4 @@
-package com.nijiko.database;
+package net.theyeticave.database;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
