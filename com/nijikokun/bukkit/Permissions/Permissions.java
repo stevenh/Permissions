@@ -44,7 +44,7 @@ public class Permissions extends JavaPlugin {
     private DefaultConfiguration config;
     public static String name = "Permissions";
     public static String codename = "Phoenix";
-    public static String version = "2.3";
+    public static String version = "2.5";
 
     /**
      * Controller for permissions and security.
@@ -144,63 +144,90 @@ public class Permissions extends JavaPlugin {
     
     public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
         Player player = null;
-        String[] tArgs = args;
         String commandName = command.getName().toLowerCase();
         
         if (sender instanceof Player) {
         	player = (Player)sender;
-        	if (!Security.permission(player, "permissions.info")) {
+        	
+        	if (!Security.has(player, "permissions.info")) {
         		player.sendMessage("You lack sufficient permissions to do that");
         		return true;
         	}
+        	Messaging.save(player);
         }
-    	Messaging.save(player);
 
         if (commandName.compareToIgnoreCase("permissions") == 0) {
-        	if (tArgs.length < 1) {
-        		Messaging.send("&7-------[ &fPermissions&7 ]-------");
-                Messaging.send("&7Currently running version: &f[" + version + "] (" + codename + ")");
+        	if (args.length < 1) {
+        		if (player != null) {
+        			Messaging.send("&7-------[ &fPermissions&7 ]-------");
+        			Messaging.send("&7Currently running version: &f[" + version + "] (" + codename + ")");
 
-                if (Security.permission(player, "permissions.reload")) {
-                	Messaging.send("&7Reload with: &f/permissions -reload [World]");
-                	Messaging.send("&fLeave [World] blank to reload default world.");
-                }
+        			if (Security.has(player, "permissions.reload")) {
+        				Messaging.send("&7Reload with: &f/permissions -reload [World]");
+        				Messaging.send("&fLeave [World] blank to reload default world.");
+        			}
 
-                Messaging.send("&7-------[ &fPermissions&7 ]-------");
-                return true;
+        			Messaging.send("&7-------[ &fPermissions&7 ]-------");
+        			return true;
+        			}
+        		else {
+                	PluginDescriptionFile pdfFile = this.getDescription();
+                	sender.sendMessage("[" + pdfFile.getName() + "] version [" + pdfFile.getVersion() + "] (" + codename + ")  loaded");
+        		}
             }
                     
-            if (tArgs[0].compareToIgnoreCase("-reload") == 0) {
-            	if (tArgs.length == 2) {
-            		if (tArgs[1].compareToIgnoreCase("all") == 0) {
-            			if (Security.permission(player, "permissions.reload")) {
-            				Security.reload();
-            				player.sendMessage(ChatColor.GRAY + "[Permissions] Default World Reload completed.");
-                			return true;
-            			}
-            			else {
-            				player.sendMessage(ChatColor.RED + "[Permissions] You lack the necessary permissions to perform this action.");
-            				return true;
-            			}
-            		}
-            		else {
-            			if (Security.permission(player, "permissions.reload")) {
-            				String world = tArgs[1];
-            				if (Security.reload(world)) {
-            					player.sendMessage(ChatColor.GRAY + "[Permissions] " + tArgs[1] + " World Reload completed.");
-            				}
-            				else {
-            					Messaging.send("&7[Permissions] " + world + " does not exist.");
-            				}
-                			return true;
-            			}
-            			else {
-            				player.sendMessage(ChatColor.RED + "[Permissions] You lack the necessary permissions to permform this action.");
-            				return true;
-            			}
-            		} 
-            	}
-            }
+        	if (args.length >= 1) {
+        		if (args[0].compareToIgnoreCase("-reload") == 0) {
+        			if (args.length == 2) {
+        				if (args[1].compareToIgnoreCase("all") == 0) {
+        					if (player != null) {
+        						if (Security.has(player, "permissions.reload")) {
+        							Security.reload();
+        							player.sendMessage(ChatColor.GRAY + "[Permissions] World Reloads completed.");
+        							return true;
+        						}
+        						else {
+        							player.sendMessage(ChatColor.RED + "[Permissions] You lack the necessary permissions to perform this action.");
+        							return true;
+        						}
+        					}
+        					else {
+        						Security.reload();
+        						sender.sendMessage("All world files reloaded.");
+        						return true;
+        					}
+        				}
+        				else {
+        					if (player != null) {
+        						if (Security.has(player, "permissions.reload")) {
+        							String world = args[1];
+        							if (Security.reload(world)) {
+        								player.sendMessage(ChatColor.GRAY + "[Permissions] " + args[1] + " World Reload completed.");
+        							}
+        							else {
+        								Messaging.send("&7[Permissions] " + world + " does not exist.");
+        							}
+        							return true;
+        						}
+        						else {
+        							player.sendMessage(ChatColor.RED + "[Permissions] You lack the necessary permissions to permform this action.");
+        							return true;
+        						}
+        					}
+        					else {
+        						String world = args[1];
+        						if (Security.reload(world)) {
+        							sender.sendMessage("[Permissions] Reload of World " + world + " completed.");
+        						}
+        						else {
+        							sender.sendMessage("[Permissions] World " + world + " does not exist.");
+        						}
+        						return true;
+        					}
+        				}
+        			}
+        		}
+        	}
         }
         return false;
     }
