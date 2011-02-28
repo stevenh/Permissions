@@ -1,4 +1,4 @@
-package net.theyeticave.configuration;
+package com.nijiko.configuration;
 
 /**
  * Basic configuration loader.

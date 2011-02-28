@@ -1,14 +1,8 @@
-package net.theyeticave.theyeti.Permissions;
+package com.nijikokun.bukkit.Permissions;
 
 import java.io.File;
 import java.util.logging.Logger;
 
-import net.theyeticave.Messaging;
-import net.theyeticave.Misc;
-import net.theyeticave.configuration.ConfigurationHandler;
-import net.theyeticave.configuration.DefaultConfiguration;
-import net.theyeticave.permissions.Control;
-import net.theyeticave.permissions.PermissionHandler;
 
 import org.bukkit.Server;
 import org.bukkit.plugin.Plugin;
@@ -19,6 +13,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.config.Configuration;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+
+import com.nijiko.Messaging;
+import com.nijiko.Misc;
+import com.nijiko.configuration.ConfigurationHandler;
+import com.nijiko.configuration.DefaultConfiguration;
+import com.nijiko.permissions.Control;
+import com.nijiko.permissions.PermissionHandler;
 
 /**
  * Permissions 1.x & Code from iConomy 2.x
@@ -68,7 +69,7 @@ public class Permissions extends JavaPlugin {
 
         // Attempt
         if (!(new File(getDataFolder(), DefaultWorld + ".yml").exists())) {
-            net.theyeticave.Misc.touch(DefaultWorld + ".yml");
+            com.nijiko.Misc.touch(DefaultWorld + ".yml");
         }
 
         Configuration configure = new Configuration(new File(getDataFolder(), DefaultWorld + ".yml"));
@@ -124,7 +125,7 @@ public class Permissions extends JavaPlugin {
 
         // Attempt
         if (!(new File(getDataFolder(), DefaultWorld + ".yml").exists())) {
-            net.theyeticave.Misc.touch(DefaultWorld + ".yml");
+            com.nijiko.Misc.touch(DefaultWorld + ".yml");
         }
 
         // Gogo

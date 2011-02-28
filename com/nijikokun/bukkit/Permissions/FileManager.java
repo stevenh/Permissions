@@ -1,7 +1,7 @@
 /*
  * Something to manage a simple file.
  */
-package net.theyeticave.theyeti.Permissions;
+package com.nijikokun.bukkit.Permissions;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

@@ -1,4 +1,4 @@
-package net.theyeticave.configuration;
+package com.nijiko.configuration;
 
 import org.bukkit.util.config.Configuration;
 

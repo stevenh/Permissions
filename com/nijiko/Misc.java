@@ -1,12 +1,13 @@
-package net.theyeticave;
+package com.nijiko;
 
 
 import java.io.File;
 import java.io.IOException;
 
-import net.theyeticave.theyeti.Permissions.Permissions;
 
 import org.bukkit.entity.Player;
+
+import com.nijikokun.bukkit.Permissions.Permissions;
 
 /**
  * Copyright (C) 2011  Nijikokun <nijikokun@gmail.com>

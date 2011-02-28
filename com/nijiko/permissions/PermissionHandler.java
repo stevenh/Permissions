@@ -1,4 +1,4 @@
-package net.theyeticave.permissions;
+package com.nijiko.permissions;
 
 import java.io.File;
 import java.util.Map;
