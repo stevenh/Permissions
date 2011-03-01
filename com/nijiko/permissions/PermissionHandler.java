@@ -102,6 +102,17 @@ public abstract class PermissionHandler {
 
     
     /**
+     * Grabs users groups.
+     * <br /><br />
+     * 
+     * @param group
+     * @return Array
+     */
+    public abstract String[] getGroups(String world, String name);
+    @Deprecated
+    public abstract String[] getGroups(String name);
+    
+    /**
      * Checks to see if the player is in the requested group. 
      *
      * @param world

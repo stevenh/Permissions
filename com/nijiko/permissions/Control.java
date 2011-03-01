@@ -291,6 +291,12 @@ public class Control extends PermissionHandler {
 
         // log.info("Checking inside world: " + world);
 
+        // Fix to disable console users getting errors
+        if (name == null && world == null)
+        {
+        	return true;
+        }
+        
         // Load if it isn't already
         this.loadWorld(world);
 

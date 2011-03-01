@@ -2,18 +2,17 @@ package com.nijikokun.bukkit.Permissions;
 
 import java.io.File;
 import java.util.logging.Logger;
-
-
 import org.bukkit.Server;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.event.Event.Priority;
 import org.bukkit.util.config.Configuration;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-
 import com.nijiko.Messaging;
 import com.nijiko.Misc;
 import com.nijiko.configuration.ConfigurationHandler;
@@ -48,6 +47,8 @@ public class Permissions extends JavaPlugin {
     public static String name = "Permissions";
     public static String codename = "Phoenix";
     public static String version = "2.5";
+    
+    public Listener l = new Listener(this);
 
     /**
      * Controller for permissions and security.
@@ -143,6 +144,9 @@ public class Permissions extends JavaPlugin {
         // Enabled
         PluginDescriptionFile pdfFile = this.getDescription();
         log.info("[" + pdfFile.getName() + "] version [" + pdfFile.getVersion() + "] (" + codename + ")  loaded");
+        
+        this.getServer().getPluginManager().registerEvent(Event.Type.BLOCK_PLACED, l, Priority.High, this);
+        this.getServer().getPluginManager().registerEvent(Event.Type.BLOCK_BREAK, l, Priority.High, this);
     }
     
     public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
