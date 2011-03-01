@@ -622,6 +622,10 @@ public class Control extends PermissionHandler {
         }
 
         String Group = (String) this.WorldUserGroups.get(world).get(name.toLowerCase());
+        if (Group == null)
+        {
+        	Group = (String) ((Object[]) this.WorldGroupsData.get(world).get(this.WorldBase.get(world)))[0];
+        }
         Set<String> Inherited = getInheritance(world, Group.toLowerCase());
         Inherited.add(Group.toLowerCase());
 
