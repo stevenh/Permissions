@@ -21,8 +21,9 @@ import com.nijiko.permissions.Control;
 import com.nijiko.permissions.PermissionHandler;
 
 /**
- * Permissions 1.x & Code from iConomy 2.x
- * Copyright (C) 2011  Nijikokun <nijikokun@gmail.com>
+ * Permissions 2.x
+ * Copyright (C) 2011  Matt 'The Yeti' Burnett <admin@theyeticave.net>
+ * Original Credit & Copyright (C) 2010 Nijikokun <nijikokun@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Permissions Public License as published by
@@ -37,6 +38,7 @@ import com.nijiko.permissions.PermissionHandler;
  * You should have received a copy of the GNU Permissions Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 public class Permissions extends JavaPlugin {
 
     public static Logger log = Logger.getLogger("Minecraft");
