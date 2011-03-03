@@ -44,6 +44,8 @@ public class Permissions extends JavaPlugin {
     public static Plugin instance;
     public static Server Server = null;
     private DefaultConfiguration config;
+    public static String name = "Permissions";
+    public static String version = "2.5.2";
     public static String codename = "Phoenix";
     
     
@@ -82,14 +84,13 @@ public class Permissions extends JavaPlugin {
         setupPermissions();
 
         // Enabled
-        PluginDescriptionFile pdfFile = this.getDescription();
-        log.info("[" + pdfFile.getName() + "] version [" + pdfFile.getVersion() + "] (" + codename + ") was Initialized.");
+        log.info("[" + name + "] version [" + version + "] (" + codename + ") was Initialized.");
     }
     
 
     public void onDisable() {
     	PluginDescriptionFile pdfFile = this.getDescription();
-    	log.info("[" + pdfFile.getName() + "] version [" + pdfFile.getVersion() + "] (" + codename + ") disabled successfully.");
+    	log.info("[" + name + "] version [" + version + "] (" + codename + ") disabled successfully.");
     	return;
     }
 
@@ -142,8 +143,7 @@ public class Permissions extends JavaPlugin {
         setupPermissions();
 
         // Enabled
-        PluginDescriptionFile pdfFile = this.getDescription();
-        log.info("[" + pdfFile.getName() + "] version [" + pdfFile.getVersion() + "] (" + codename + ")  loaded");
+        log.info("[" + description.getName() + "] version [" + description.getVersion() + "] (" + codename + ")  loaded");
         
         this.getServer().getPluginManager().registerEvent(Event.Type.BLOCK_PLACED, l, Priority.High, this);
         this.getServer().getPluginManager().registerEvent(Event.Type.BLOCK_BREAK, l, Priority.High, this);
