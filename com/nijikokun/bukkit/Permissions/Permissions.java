@@ -89,7 +89,6 @@ public class Permissions extends JavaPlugin {
     
 
     public void onDisable() {
-    	PluginDescriptionFile pdfFile = this.getDescription();
     	log.info("[" + name + "] version [" + version + "] (" + codename + ") disabled successfully.");
     	return;
     }
