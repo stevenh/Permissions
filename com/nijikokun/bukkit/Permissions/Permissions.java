@@ -44,9 +44,8 @@ public class Permissions extends JavaPlugin {
     public static Plugin instance;
     public static Server Server = null;
     private DefaultConfiguration config;
-    public static String name = "Permissions";
     public static String codename = "Phoenix";
-    public static String version = "2.5";
+    
     
     public Listener l = new Listener(this);
 
@@ -83,7 +82,8 @@ public class Permissions extends JavaPlugin {
         setupPermissions();
 
         // Enabled
-        log.info("[" + name + "] version [" + version + "] (" + codename + ") was Initialized.");
+        PluginDescriptionFile pdfFile = this.getDescription();
+        log.info("[" + pdfFile.getName() + "] version [" + pdfFile.getVersion() + "] (" + codename + ") was Initialized.");
     }
     
 
@@ -152,14 +152,11 @@ public class Permissions extends JavaPlugin {
     public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
         Player player = null;
         String commandName = command.getName().toLowerCase();
+        PluginDescriptionFile pdfFile = this.getDescription();
         
         if (sender instanceof Player) {
         	player = (Player)sender;
-        	
-        	if (!Security.has(player, "permissions.info")) {
-        		player.sendMessage("You lack sufficient permissions to do that");
-        		return true;
-        	}
+
         	Messaging.save(player);
         }
 
@@ -167,7 +164,7 @@ public class Permissions extends JavaPlugin {
         	if (args.length < 1) {
         		if (player != null) {
         			Messaging.send("&7-------[ &fPermissions&7 ]-------");
-        			Messaging.send("&7Currently running version: &f[" + version + "] (" + codename + ")");
+        			Messaging.send("&7Currently running version: &f[" + pdfFile.getVersion() + "] (" + codename + ")");
 
         			if (Security.has(player, "permissions.reload")) {
         				Messaging.send("&7Reload with: &f/permissions -reload [World]");
@@ -178,7 +175,6 @@ public class Permissions extends JavaPlugin {
         			return true;
         			}
         		else {
-                	PluginDescriptionFile pdfFile = this.getDescription();
                 	sender.sendMessage("[" + pdfFile.getName() + "] version [" + pdfFile.getVersion() + "] (" + codename + ")  loaded");
         		}
             }

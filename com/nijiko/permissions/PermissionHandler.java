@@ -125,6 +125,17 @@ public abstract class PermissionHandler {
     public abstract boolean inGroup(String name, String group);
 
     /**
+     * Checks to see if a player is in a single group.
+     * This does not check inheritance.
+     * 
+     * @param world
+     * @param name - Player
+     * @param group - Group to be checked
+     * @return boolean
+     */
+    public abstract boolean inSingleGroup(String world, String name, String group);
+    
+    /**
      * Grabs group prefix, line that comes before the group.
      * <br /><br />
      * Namespace: groups.name.info.prefix

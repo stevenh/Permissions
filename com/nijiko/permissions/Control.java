@@ -137,7 +137,8 @@ public class Control extends PermissionHandler {
         this.load(this.defaultWorld, this.config);
     }
 
-    public void load(String world, Configuration config) {
+    @SuppressWarnings("unused")
+	public void load(String world, Configuration config) {
         if (!(new File(this.directory + File.pathSeparator + world + ".yml").exists())) {
             FileManager file = new FileManager(this.directory.getPath() + File.separator, world + ".yml", true);
         }
@@ -157,6 +158,10 @@ public class Control extends PermissionHandler {
                 this.WorldInheritance.put(world, config.getString("plugin.permissions.copies", ""));
                 return;
             }
+            if (!(new File(this.directory + File.pathSeparator + world + ".yml").exists())) {
+            	this.WorldInheritance.put(world, defaultWorld);
+            }
+            
         }
 
         this.WorldBase.put(world, "");
@@ -248,7 +253,8 @@ public class Control extends PermissionHandler {
         }
     }
 
-    private String toArrayListString(Collection<String> variable) {
+    @SuppressWarnings("unused")
+	private String toArrayListString(Collection<String> variable) {
         return new ArrayList<String>(variable).toString();
     }
 
@@ -281,7 +287,8 @@ public class Control extends PermissionHandler {
      * @param permission
      * @return boolean
      */
-    public boolean permission(Player player, String permission) {
+    @SuppressWarnings("unused")
+	public boolean permission(Player player, String permission) {
         Set<String> Permissions = new HashSet<String>();
         Set<String> GroupPermissions = new HashSet<String>();
         Set<String> GroupInheritedPermissions = new HashSet<String>();
@@ -367,7 +374,7 @@ public class Control extends PermissionHandler {
         StringTokenizer globalized = new StringTokenizer(permission, ".");
 
         if (GroupInheritedPermissions.size() > 0) {
-            GroupPermissions.addAll(GroupInheritedPermissions);
+        	GroupPermissions.addAll(GroupInheritedPermissions);
         }
 
         // log.info("Group Permissions: " + (new ArrayList<String>(GroupPermissions)).toString());
@@ -431,7 +438,8 @@ public class Control extends PermissionHandler {
         return new HashSet<String>();
     }
 
-    private Object[] getInheritancePermissions(String world, Set<String> Permissions, Set<String> Inheritance, Set<String> Checked, String group) {
+    @SuppressWarnings("unchecked")
+	private Object[] getInheritancePermissions(String world, Set<String> Permissions, Set<String> Inheritance, Set<String> Checked, String group) {
         Map<String, Set<String>> Groups = this.WorldGroups.get(world);
 
         group = group.toLowerCase();
@@ -470,7 +478,8 @@ public class Control extends PermissionHandler {
         return new Object[]{Permissions, Checked};
     }
 
-    private Set<String> getInheritancePermissions(String world, String group) {
+    @SuppressWarnings("unchecked")
+	private Set<String> getInheritancePermissions(String world, String group) {
         group = group.toLowerCase();
         Map<String, Set<String>> Groups = this.WorldGroups.get(world);
         Set<String> Permissions = new HashSet<String>();
@@ -526,6 +535,23 @@ public class Control extends PermissionHandler {
         }
 
         return false;
+    }
+    
+    public boolean inSingleGroup(String world, String name, String group) {
+    	this.loadWorld(world);
+    	
+    	name = name.toLowerCase();
+    	group = group.toLowerCase();
+    	
+    	if (this.WorldUserPermissions.get(world).containsKey(name)) {
+    		String Group = (String) this.WorldUserGroups.get(world).get(name);
+    		
+    		if (Group.equalsIgnoreCase(group)) {
+    			return true;
+    		}
+    	}
+    	
+    	return false;
     }
 
     public String getGroup(String world, String name) {
@@ -1029,7 +1055,8 @@ public class Control extends PermissionHandler {
         return userGroupPermission;
     }
     
-    public int getPermissionInteger(String world, String name, String permission) {
+    @SuppressWarnings("null")
+	public int getPermissionInteger(String world, String name, String permission) {
         this.loadWorld(world);
 
         if(this.WorldInheritance.containsKey(world) && !world.equals(this.defaultWorld)) {

@@ -1,4 +1,11 @@
 Changelog
+2.5.2
+Added in a check that will use the default world permissions if a world does not have a config file.
+Added check public abstract boolean inSingleGroup(String world, String name, String group)
+
+2.5.1
+Fixed a bug that could cause a group to be returned as null for getGroups()
+
 2.5
 Fixed console users not being able to issue command
 Added in AntiBuild functionality

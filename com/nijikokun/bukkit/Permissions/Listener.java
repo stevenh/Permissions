@@ -9,6 +9,7 @@ import com.nijikokun.bukkit.Permissions.Permissions;
 
 
 public class Listener extends BlockListener {
+	@SuppressWarnings("unused")
 	private final Permissions plugin;
 	
 	public Listener(final Permissions plugin) {

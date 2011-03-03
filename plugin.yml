@@ -1,6 +1,6 @@
 name: Permissions
 main: com.nijikokun.bukkit.Permissions.Permissions
-version: 2.5
+version: 2.5.2
 author: TheNo1Yeti
 website: www.theyeticave.net
 commands:
