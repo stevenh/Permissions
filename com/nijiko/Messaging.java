@@ -87,7 +87,8 @@ public class Messaging {
      * @return <code>String</code> - The parsed string after conversion.
      */
     public static String colorize(String original) {
-	return original.replace("<black>", "ยง0").replace("<navy>", "ยง1").replace("<green>", "ยง2").replace("<teal>", "ยง3").replace("<red>", "ยง4").replace("<purple>", "ยง5").replace("<gold>", "ยง6").replace("<silver>", "ยง7").replace("<gray>", "ยง8").replace("<blue>", "ยง9").replace("<lime>", "ยงa").replace("<aqua>", "ยงb").replace("<rose>", "ยงc").replace("<pink>", "ยงd").replace("<yellow>", "ยงe").replace("<white>", "ยงf");
+    //Removed the weird ย character
+	return original.replace("<black>", "ง0").replace("<navy>", "ง1").replace("<green>", "ง2").replace("<teal>", "ง3").replace("<red>", "ง4").replace("<purple>", "ง5").replace("<gold>", "ง6").replace("<silver>", "ง7").replace("<gray>", "ง8").replace("<blue>", "ง9").replace("<lime>", "งa").replace("<aqua>", "งb").replace("<rose>", "งc").replace("<pink>", "งd").replace("<yellow>", "งe").replace("<white>", "งf");
     }
 
     /**
