@@ -69,7 +69,8 @@ public class Messaging {
      */
     public static String parse(String original) {
 	original = colorize(original);
-	return original.replaceAll("(&([a-z0-9]))", "§$2").replace("&&", "&");
+	//Optionally change the \u00A7 back to § and tack .replace(String.valueOf((char)194), "") onto end of line
+	return original.replaceAll("(&([a-z0-9]))", "\u00A7$2").replace("&&", "&");
     }
 
     /**
