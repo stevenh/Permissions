@@ -1,4 +1,7 @@
 Changelog
+2.5.3
+Change from File.pathSeparator to File.separator to fix multiworld perms
+
 2.5.2
 Added in a check that will use the default world permissions if a world does not have a config file.
 Added check public abstract boolean inSingleGroup(String world, String name, String group)

@@ -140,7 +140,7 @@ public class Control extends PermissionHandler {
 
     @SuppressWarnings("unused")
 	public void load(String world, Configuration config) {
-        if (!(new File(this.directory + File.pathSeparator + world + ".yml").exists())) {
+        if (!(new File(this.directory + File.separator + world + ".yml").exists())) {
             FileManager file = new FileManager(this.directory.getPath() + File.separator, world + ".yml", true);
         }
 
@@ -159,8 +159,10 @@ public class Control extends PermissionHandler {
                 this.WorldInheritance.put(world, config.getString("plugin.permissions.copies", ""));
                 return;
             }
-            if (!(new File(this.directory + File.pathSeparator + world + ".yml").exists())) {
+            
+            if (!(new File(this.directory + File.separator + world + ".yml").exists())) {
             	this.WorldInheritance.put(world, defaultWorld);
+            	log.info("Copying the world" + this.directory + File.separator + world + ".yml");
             }
             
         }
