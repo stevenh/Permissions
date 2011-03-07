@@ -375,4 +375,11 @@ public abstract class PermissionHandler {
     @Deprecated
     public abstract double getPermissionDouble(String name, String permission);
 
+    public abstract void addGroupInfo(String world, String group, String node, Object data);
+    public abstract void removeGroupInfo(String world, String group, String node);
+    
+    public abstract void addUserPermission(String world, String user, String node);
+    public abstract void removeUserPermission(String world, String user, String node);
+    
+    
 }
