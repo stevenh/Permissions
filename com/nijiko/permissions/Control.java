@@ -14,12 +14,12 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
 
-
 import org.bukkit.entity.Player;
 import org.bukkit.util.config.Configuration;
 
 import com.nijiko.Messaging;
 import com.nijikokun.bukkit.Permissions.FileManager;
+import com.nijikokun.bukkit.Permissions.Permissions;
 
 /**
  * Permissions 2.x
@@ -61,10 +61,11 @@ public class Control extends PermissionHandler {
     private Map<String, Map<String, Set<String>>> WorldGroupsInheritance = new HashMap<String, Map<String, Set<String>>>();
     private Map<String, Map<String, Boolean>> WorldCache = new HashMap<String, Map<String, Boolean>>();
 
-    private File directory;
     private String defaultWorld = "";
     private Configuration config;
+    private String directory = Permissions.instance.getDataFolder().getPath();
 
+    
     public Control(Configuration config) {
         this.config = config;
     }
@@ -102,14 +103,10 @@ public class Control extends PermissionHandler {
         this.defaultWorld = world;
     }
 
-    public void setDirectory(File directory) {
-        this.directory = directory;
-    }
-
     public boolean loadWorld(String world) {
         // log.info("Checking for the world: " + world);
         if(!this.Worlds.contains(world)) {
-            this.load(world, new Configuration(new File(this.directory + File.separator + world + ".yml")));
+            this.load(world, new Configuration(new File(directory + world + ".yml")));
             log.info("Loaded world: " + world);
            return true;
         }
@@ -119,7 +116,7 @@ public class Control extends PermissionHandler {
     }
     
     public void forceLoadWorld(String world) {
-        this.load(world, new Configuration(new File(this.directory + File.separator + world + ".yml")));
+        this.load(world, new Configuration(new File(directory + world + ".yml")));
     }
 
     public boolean checkWorld(String world) {
@@ -140,8 +137,8 @@ public class Control extends PermissionHandler {
 
     @SuppressWarnings("unused")
 	public void load(String world, Configuration config) {
-        if (!(new File(this.directory + File.separator + world + ".yml").exists())) {
-            FileManager file = new FileManager(this.directory.getPath() + File.separator, world + ".yml", true);
+        if (!(new File(directory + world + ".yml").exists())) {
+            FileManager file = new FileManager(directory, world + ".yml", true);
         }
 
         // log.info("Configuration file: " + directory.getPath() + File.separator + world + ".yml");
@@ -160,9 +157,9 @@ public class Control extends PermissionHandler {
                 return;
             }
             
-            if (!(new File(this.directory + File.separator + world + ".yml").exists())) {
+            if (!(new File(directory + world + ".yml").exists())) {
             	this.WorldInheritance.put(world, defaultWorld);
-            	log.info("Copying the world" + this.directory + File.separator + world + ".yml");
+            	//log.info("Copying the world" + this.directory + File.separator + world + ".yml");
             }
             
         }

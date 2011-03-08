@@ -1,6 +1,5 @@
 package com.nijiko.permissions;
 
-import java.io.File;
 import java.util.Map;
 import org.bukkit.entity.Player;
 import org.bukkit.util.config.Configuration;
@@ -32,7 +31,7 @@ import org.bukkit.util.config.Configuration;
 public abstract class PermissionHandler {
 
     public abstract void setDefaultWorld(String world);
-    public abstract void setDirectory(File directory);
+
 
     public abstract boolean loadWorld(String world);
     public abstract void forceLoadWorld(String world);

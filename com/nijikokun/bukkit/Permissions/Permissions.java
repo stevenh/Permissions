@@ -109,9 +109,8 @@ public class Permissions extends JavaPlugin {
     }
 
     public void setupPermissions() {
-        Security = new Control(new Configuration(new File("plugins" + File.separator + "Permissions", DefaultWorld + ".yml")));
+        Security = new Control(new Configuration(new File(getDataFolder(), DefaultWorld + ".yml")));
         Security.setDefaultWorld(DefaultWorld);
-        Security.setDirectory(new File("plugins" + File.separator + "Permissions"));
         Security.load();
     }
 
@@ -128,7 +127,7 @@ public class Permissions extends JavaPlugin {
 
         // Attempt
         if (!(new File(getDataFolder(), DefaultWorld + ".yml").exists())) {
-            com.nijiko.Misc.touch(DefaultWorld + ".yml");
+            com.nijiko.Misc.touch(getDataFolder() + DefaultWorld + ".yml");
         }
 
         // Gogo
