@@ -47,7 +47,7 @@ public class Permissions extends JavaPlugin {
     public static Server Server = null;
     private DefaultConfiguration config;
     public static String name = "Permissions";
-    public static String version = "2.5.3";
+    public static String version = "2.5.4";
     public static String codename = "Phoenix";
     
     

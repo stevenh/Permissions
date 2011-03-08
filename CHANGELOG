@@ -1,4 +1,8 @@
 Changelog
+2.5.4
+Changed the way directories are handled.
+Stopped it from creating an empty <world>.yml file in base directory
+
 2.5.3
 Change from File.pathSeparator to File.separator to fix multiworld perms
 
