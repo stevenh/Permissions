@@ -63,7 +63,7 @@ public class Control extends PermissionHandler {
 
     private String defaultWorld = "";
     private Configuration config;
-    private String directory = Permissions.instance.getDataFolder().getPath();
+    private String directory = Permissions.directory.getPath();
 
     
     public Control(Configuration config) {

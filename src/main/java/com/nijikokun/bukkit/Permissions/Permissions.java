@@ -45,6 +45,7 @@ public class Permissions extends JavaPlugin {
     public static PluginDescriptionFile description;
     public static Plugin instance;
     public static Server Server = null;
+    public static File directory;
     private DefaultConfiguration config;
     public static String name = "Permissions";
     public static String version = "2.5.4";
@@ -83,7 +84,7 @@ public class Permissions extends JavaPlugin {
         this.config = new ConfigurationHandler(configure);
 
         // Setup Permission
-        setupPermissions();
+        //setupPermissions();
 
         // Enabled
         log.info("[" + name + "] version [" + version + "] (" + codename + ") was Initialized.");
@@ -109,7 +110,7 @@ public class Permissions extends JavaPlugin {
     }
 
     public void setupPermissions() {
-        Security = new Control(new Configuration(new File(getDataFolder(), DefaultWorld + ".yml")));
+        Security = new Control(new Configuration(new File(directory, DefaultWorld + ".yml")));
         Security.setDefaultWorld(DefaultWorld);
         Security.load();
     }
@@ -118,6 +119,8 @@ public class Permissions extends JavaPlugin {
     	instance = this;
     	Server = this.getServer();
     	description = this.getDescription();
+    	directory = this.getDataFolder();
+    	
     	
         // Start Registration
         getDataFolder().mkdirs();
