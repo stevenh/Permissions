@@ -1,5 +1,6 @@
 Changelog
 2.5.4
+Added Command aliases for perms and pr
 Changed the way directories are handled.
 Stopped it from creating an empty <world>.yml file in base directory
 
