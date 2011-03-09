@@ -45,7 +45,7 @@ public class Permissions extends JavaPlugin {
     public static PluginDescriptionFile description;
     public static Plugin instance;
     public static Server Server = null;
-    public static File directory;
+    public File directory;
     private DefaultConfiguration config;
     public static String name = "Permissions";
     public static String version = "2.5.4";
@@ -73,18 +73,19 @@ public class Permissions extends JavaPlugin {
         DefaultWorld = server.getString("level-name");
 
         // Attempt
-        if (!(new File(getDataFolder(), DefaultWorld + ".yml").exists())) {
-            com.nijiko.Misc.touch(DefaultWorld + ".yml");
+        if (!(new File("plugins" + File.separator + "Permissions", DefaultWorld + ".yml").exists())) {
+        	log.info("[Permissions] Created new empty world file in " + directory.getPath() + "named " + DefaultWorld + ".yml");
+            com.nijiko.Misc.touch("plugins" + File.separator + "Permissions" + DefaultWorld + ".yml");
         }
 
-        Configuration configure = new Configuration(new File(getDataFolder(), DefaultWorld + ".yml"));
+        Configuration configure = new Configuration(new File("plugins" + File.separator + "Permissions", DefaultWorld + ".yml"));
         configure.load();
 
         // Gogo
         this.config = new ConfigurationHandler(configure);
 
         // Setup Permission
-        //setupPermissions();
+        setupPermissions();
 
         // Enabled
         log.info("[" + name + "] version [" + version + "] (" + codename + ") was Initialized.");
@@ -110,7 +111,7 @@ public class Permissions extends JavaPlugin {
     }
 
     public void setupPermissions() {
-        Security = new Control(new Configuration(new File(directory, DefaultWorld + ".yml")));
+        Security = new Control(new Configuration(new File("plugins" + File.separator + "Permissions", DefaultWorld + ".yml")));
         Security.setDefaultWorld(DefaultWorld);
         Security.load();
     }
@@ -119,7 +120,7 @@ public class Permissions extends JavaPlugin {
     	instance = this;
     	Server = this.getServer();
     	description = this.getDescription();
-    	directory = this.getDataFolder();
+    	directory = getDataFolder();
     	
     	
         // Start Registration
@@ -130,6 +131,7 @@ public class Permissions extends JavaPlugin {
 
         // Attempt
         if (!(new File(getDataFolder(), DefaultWorld + ".yml").exists())) {
+        	log.info("[Permissions] Created new empty world file in " + directory.getPath() + "named " + DefaultWorld + ".yml");
             com.nijiko.Misc.touch(getDataFolder() + DefaultWorld + ".yml");
         }
 
@@ -143,7 +145,7 @@ public class Permissions extends JavaPlugin {
         this.config.load();
 
         // Setup Permission
-        setupPermissions();
+        //setupPermissions();
 
         // Enabled
         log.info("[" + description.getName() + "] version [" + description.getVersion() + "] (" + codename + ")  loaded");

@@ -63,7 +63,6 @@ public class Control extends PermissionHandler {
 
     private String defaultWorld = "";
     private Configuration config;
-    private String directory = Permissions.directory.getPath();
 
     
     public Control(Configuration config) {
@@ -106,7 +105,7 @@ public class Control extends PermissionHandler {
     public boolean loadWorld(String world) {
         // log.info("Checking for the world: " + world);
         if(!this.Worlds.contains(world)) {
-            this.load(world, new Configuration(new File(directory + world + ".yml")));
+            this.load(world, new Configuration(new File(Permissions.instance.getDataFolder().getPath() + File.separator + world + ".yml")));
             log.info("Loaded world: " + world);
            return true;
         }
@@ -116,7 +115,7 @@ public class Control extends PermissionHandler {
     }
     
     public void forceLoadWorld(String world) {
-        this.load(world, new Configuration(new File(directory + world + ".yml")));
+        this.load(world, new Configuration(new File(Permissions.instance.getDataFolder().getPath() + File.separator + world + ".yml")));
     }
 
     public boolean checkWorld(String world) {
@@ -137,8 +136,8 @@ public class Control extends PermissionHandler {
 
     @SuppressWarnings("unused")
 	public void load(String world, Configuration config) {
-        if (!(new File(directory + world + ".yml").exists())) {
-            FileManager file = new FileManager(directory, world + ".yml", true);
+        if (!(new File(Permissions.instance.getDataFolder().getPath() + File.separator + world + ".yml").exists())) {
+            FileManager file = new FileManager(Permissions.instance.getDataFolder().getPath() + File.separator, world + ".yml", true);
         }
 
         // log.info("Configuration file: " + directory.getPath() + File.separator + world + ".yml");
@@ -157,7 +156,7 @@ public class Control extends PermissionHandler {
                 return;
             }
             
-            if (!(new File(directory + world + ".yml").exists())) {
+            if (!(new File(Permissions.instance.getDataFolder().getPath() + File.separator + world + ".yml").exists())) {
             	this.WorldInheritance.put(world, defaultWorld);
             	//log.info("Copying the world" + this.directory + File.separator + world + ".yml");
             }
