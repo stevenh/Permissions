@@ -3,8 +3,11 @@ main: com.nijikokun.bukkit.Permissions.Permissions
 version: 2.5.4
 author: TheNo1Yeti
 website: www.theyeticave.net
+description: >
+             Provides a Permissions framework for use with Bukkit Plugins
 commands:
   permissions:
+    aliases: [perms, pr]
     description: Provides access to Permissions commands and information.
     usage: |
            /<command>
