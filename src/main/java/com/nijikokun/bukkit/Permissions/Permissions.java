@@ -2,7 +2,6 @@ package com.nijikokun.bukkit.Permissions;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
@@ -84,7 +83,7 @@ public class Permissions extends JavaPlugin {
         				FileChannel destination = null;
         				try {
         					source = new FileInputStream(new File("plugins" + File.separator + "Permissions", "world.yml")).getChannel();
-        					destination = new FileOutputStream(new File("plugins" + File.separator + getDescription().getName(), DefaultWorld + ".yml")).getChannel();
+        					destination = new FileOutputStream(new File("plugins" + File.separator + "Permissions", DefaultWorld + ".yml")).getChannel();
         					destination.transferFrom(source, 0, source.size());
         				}
         				finally {
@@ -97,7 +96,7 @@ public class Permissions extends JavaPlugin {
         				}
         			}
         		}
-        		if (new File("plugins" + File.separator + "Permissions", "config.yml").exists()) {
+        		else if (new File("plugins" + File.separator + "Permissions", "config.yml").exists()) {
         			FileChannel source = null;
         			FileChannel destination = null;
         		
