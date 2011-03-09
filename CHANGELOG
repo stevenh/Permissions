@@ -1,4 +1,8 @@
 Changelog
+3.0
+Simplified versioning
+Implemented conversion system to attempt to circumvent loading issues
+
 2.5.4
 Added Command aliases for perms and pr
 Changed the way directories are handled.

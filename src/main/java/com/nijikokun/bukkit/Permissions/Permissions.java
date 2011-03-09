@@ -1,6 +1,11 @@
 package com.nijikokun.bukkit.Permissions;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.util.logging.Logger;
 import org.bukkit.Server;
 import org.bukkit.plugin.Plugin;
@@ -47,9 +52,7 @@ public class Permissions extends JavaPlugin {
     public static Server Server = null;
     public File directory;
     private DefaultConfiguration config;
-    public static String name = "Permissions";
-    public static String version = "2.5.4";
-    public static String codename = "Phoenix";
+    public static String codename = "Cluricaun";
     
     
     public Listener l = new Listener(this);
@@ -73,9 +76,49 @@ public class Permissions extends JavaPlugin {
         DefaultWorld = server.getString("level-name");
 
         // Attempt
-        if (!(new File("plugins" + File.separator + "Permissions", DefaultWorld + ".yml").exists())) {
-        	log.info("[Permissions] Created new empty world file in " + directory.getPath() + "named " + DefaultWorld + ".yml");
-            com.nijiko.Misc.touch("plugins" + File.separator + "Permissions" + DefaultWorld + ".yml");
+        try {
+        	if (!(new File("plugins" + File.separator + "Permissions", DefaultWorld + ".yml").exists())) {
+        		if (new File("plugins" + File.separator + "Permissions", "world.yml").exists()) {
+        			if (!DefaultWorld.equals("world")) {
+        				FileChannel source = null;
+        				FileChannel destination = null;
+        				try {
+        					source = new FileInputStream(new File("plugins" + File.separator + "Permissions", "world.yml")).getChannel();
+        					destination = new FileOutputStream(new File("plugins" + File.separator + getDescription().getName(), DefaultWorld + ".yml")).getChannel();
+        					destination.transferFrom(source, 0, source.size());
+        				}
+        				finally {
+        					if (source != null) {
+        						source.close();
+        					}
+        					if (destination != null) {
+        						destination.close();
+        					}
+        				}
+        			}
+        		}
+        		if (new File("plugins" + File.separator + "Permissions", "config.yml").exists()) {
+        			FileChannel source = null;
+        			FileChannel destination = null;
+        		
+        			try {
+        				source = new FileInputStream(new File("plugins" + File.separator + "Permissions", "config.yml")).getChannel();
+        				destination = new FileOutputStream(new File("plugins" + File.separator + "Permissions", DefaultWorld + ".yml")).getChannel();
+        				destination.transferFrom(source, 0, source.size());
+        			}
+        			finally {
+        				if (source != null) {
+        					source.close();
+        				}
+        				if (destination != null) {
+        					destination.close();
+        				}
+        			}
+        		}           
+        	}
+        	log.info("Invalid config file found and converted to proper name/format.");
+        } catch (IOException e) {
+        	e.printStackTrace();
         }
 
         Configuration configure = new Configuration(new File("plugins" + File.separator + "Permissions", DefaultWorld + ".yml"));
@@ -88,12 +131,12 @@ public class Permissions extends JavaPlugin {
         setupPermissions();
 
         // Enabled
-        log.info("[" + name + "] version [" + version + "] (" + codename + ") was Initialized.");
+        log.info("[Permissions] (" + codename + ") was Initialized.");
     }
     
 
     public void onDisable() {
-    	log.info("[" + name + "] version [" + version + "] (" + codename + ") disabled successfully.");
+    	log.info("[Permissions] (" + codename + ") disabled successfully.");
     	return;
     }
 
@@ -131,7 +174,6 @@ public class Permissions extends JavaPlugin {
 
         // Attempt
         if (!(new File(getDataFolder(), DefaultWorld + ".yml").exists())) {
-        	log.info("[Permissions] Created new empty world file in " + directory.getPath() + "named " + DefaultWorld + ".yml");
             com.nijiko.Misc.touch(getDataFolder() + DefaultWorld + ".yml");
         }
 
