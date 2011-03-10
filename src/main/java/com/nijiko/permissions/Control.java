@@ -657,11 +657,6 @@ public class Control extends PermissionHandler {
         return Inherited.toArray(new String[0]);
     }
 
-    @Deprecated
-    public void setCache(Map<String, Boolean> Cache) {
-        this.WorldCache.put(this.defaultWorld, Cache);
-    }
-    
     public void setCache(String world, Map<String, Boolean> Cache) {
         this.loadWorld(world);
 
@@ -675,12 +670,7 @@ public class Control extends PermissionHandler {
             this.WorldCache.put(world, Cache);
         }
     }
-    
-    @Deprecated
-    public void setCacheItem(String player, String permission, boolean data) {
-        this.WorldCache.get(this.defaultWorld).put(player + "," + permission, data);
-    }
-    
+   
     public void setCacheItem(String world, String player, String permission, boolean data) {
         this.loadWorld(world);
 
@@ -693,11 +683,6 @@ public class Control extends PermissionHandler {
         if(this.Worlds.contains(world)) {
             this.WorldCache.get(world).put(player + "," + permission, data);
         }
-    }
-
-    @Deprecated
-    public Map<String, Boolean> getCache() {
-        return this.WorldCache.get(this.defaultWorld);
     }
 
     public Map<String, Boolean> getCache(String world) {
@@ -714,15 +699,6 @@ public class Control extends PermissionHandler {
         }
 
         return new HashMap<String, Boolean>();
-    }
-
-    @Deprecated
-    public boolean getCacheItem(String player, String permission) {
-        if (this.WorldCache.get(this.defaultWorld).containsKey(player + "," + permission)) {
-            return this.WorldCache.get(this.defaultWorld).get(player + "," + permission);
-        }
-
-        return false;
     }
 
     public boolean getCacheItem(String world, String player, String permission) {
@@ -747,11 +723,6 @@ public class Control extends PermissionHandler {
         }
 
         return false;
-    }
-
-    @Deprecated
-    public void removeCachedItem(String player, String permission) {
-        this.removeCachedItem(this.defaultWorld, player, permission);
     }
 
     public void removeCachedItem(String world, String player, String permission) {
@@ -1019,7 +990,7 @@ public class Control extends PermissionHandler {
         String userPermission = this.getUserPermissionString(world, name, permission);
         String userGroupPermission = "";
 
-        if (group != null /*|| !group.isEmpty()*/) {
+        if (group != null) {
             userGroupPermission = this.getGroupPermissionString(world, group, permission);
         }
 
@@ -1043,7 +1014,7 @@ public class Control extends PermissionHandler {
         boolean userPermission = this.getUserPermissionBoolean(world, name, permission);
         boolean userGroupPermission = false;
 
-        if (group != null /*|| !group.isEmpty()*/) {
+        if (group != null) {
             userGroupPermission = this.getGroupPermissionBoolean(world, group, permission);
         }
 
@@ -1101,135 +1072,5 @@ public class Control extends PermissionHandler {
         }
 
         return userGroupPermission;
-    }
-
-    @Deprecated
-    public boolean inGroup(String name, String group) {
-        return this.inGroup(this.defaultWorld, name, group);
-    }
-
-    @Deprecated
-    public String getGroup(String name) {
-        return this.getGroup(this.defaultWorld, name);
-    }
-
-    @Deprecated
-    public String getGroupPrefix(String group) {
-        return this.getGroupPrefix(this.defaultWorld, group);
-    }
-
-    @Deprecated
-    public String getGroupSuffix(String group) {
-        return this.getGroupSuffix(this.defaultWorld, group);
-    }
-
-    @Deprecated
-    public boolean canGroupBuild(String group) {
-        return this.canGroupBuild(this.defaultWorld, group);
-    }
-
-    @Deprecated
-    public String[] getGroups(String name) {
-        return this.getGroups(this.defaultWorld, name);
-    }
-
-    @Deprecated
-    public String getGroupPermissionString(String group, String permission) {
-        return this.getGroupPermissionString(this.defaultWorld, group, permission);
-    }
-
-    @Deprecated
-    public int getGroupPermissionInteger(String group, String permission) {
-        return this.getGroupPermissionInteger(this.defaultWorld, group, permission);
-    }
-
-    @Deprecated
-    public boolean getGroupPermissionBoolean(String group, String permission) {
-        return this.getGroupPermissionBoolean(this.defaultWorld, group, permission);
-    }
-
-    @Deprecated
-    public double getGroupPermissionDouble(String group, String permission) {
-        return this.getGroupPermissionDouble(this.defaultWorld, group, permission);
-    }
-
-    @Deprecated
-    public String getUserPermissionString(String name, String permission) {
-        return this.getUserPermissionString(this.defaultWorld, name, permission);
-    }
-
-    @Deprecated
-    public int getUserPermissionInteger(String name, String permission) {
-        return this.getUserPermissionInteger(this.defaultWorld, name, permission);
-    }
-
-    @Deprecated
-    public boolean getUserPermissionBoolean(String name, String permission) {
-        return this.getUserPermissionBoolean(this.defaultWorld, name, permission);
-    }
-
-    @Deprecated
-    public double getUserPermissionDouble(String name, String permission) {
-        return this.getUserPermissionDouble(this.defaultWorld, name, permission);
-    }
-
-    @Deprecated
-    public String getPermissionString(String name, String permission) {
-        return this.getPermissionString(this.defaultWorld, name, permission);
-    }
-
-    @Deprecated
-    public boolean getPermissionBoolean(String name, String permission) {
-        return this.getPermissionBoolean(this.defaultWorld, name, permission);
-    }
-
-    @Deprecated
-    public int getPermissionInteger(String name, String permission) {
-        return this.getPermissionInteger(this.defaultWorld, name, permission);
-    }
-
-    @Deprecated
-    public double getPermissionDouble(String name, String permission) {
-        return this.getPermissionDouble(this.defaultWorld, name, permission);
-    }
-    
-    @Deprecated
-    public void removeUserInfo(String user, String node) {
-        this.removeUserInfo(this.defaultWorld, user, node);
-    }
-    
-    @Deprecated
-    public void addGroupPermission(String group, String node) {
-        this.addGroupPermission(this.defaultWorld, group, node);
-    }
-    
-    @Deprecated
-    public void removeGroupPermission(String group, String node) {
-        this.removeGroupPermission(this.defaultWorld, group, node);
-    }
-    
-    @Deprecated
-    public void addGroupInfo(String group, String node, Object data) {
-        this.addGroupInfo(this.defaultWorld, group, node, data);
-    }
-    
-    @Deprecated
-    public void removeGroupInfo(String group, String node) {
-        this.removeGroupInfo(this.defaultWorld, group, node);
-    }
-    
-    @Deprecated
-    public void addUserPermission(String user, String node) {
-        this.addUserPermission(this.defaultWorld, user, node);
-    }
-    
-    @Deprecated
-    public void removeUserPermission(String user, String node) {
-        this.removeUserPermission(this.defaultWorld, user, node);
-    }
-    
-    @Deprecated
-    public void addUserInfo(String user, String node, Object data) {
-        this.addUserInfo(this.defaultWorld, user, node, data);
     }
 }
