@@ -38,7 +38,7 @@ public abstract class PermissionHandler {
     public abstract boolean checkWorld(String world);
 
     public abstract void load();
-    public abstract void load(String world, Configuration config);
+    public abstract void load(String world);
     public abstract void reload();
     public abstract boolean reload(String world);
 
@@ -69,9 +69,9 @@ public abstract class PermissionHandler {
      * <blockquote><pre>
      * boolean canReload = Plugin.Permissions.Security.permission(player, "permission.reload");
      * if(canReload) {
-     *	System.out.println("The user can reload!");
+     *  System.out.println("The user can reload!");
      * } else {
-     *	System.out.println("The user has no such permission!");
+     *  System.out.println("The user has no such permission!");
      * }
      * </pre></blockquote>
      *
@@ -81,7 +81,7 @@ public abstract class PermissionHandler {
      */
     public abstract boolean permission(Player player, String permission);
 
-    
+
     /**
      * Grabs group name.
      * <br /><br />
@@ -92,18 +92,18 @@ public abstract class PermissionHandler {
      */
     public abstract String getGroup(String world, String name);
 
-    
+
     /**
      * Grabs users groups.
      * <br /><br />
-     * 
+     *
      * @param group
      * @return Array
      */
     public abstract String[] getGroups(String world, String name);
 
     /**
-     * Checks to see if the player is in the requested group. 
+     * Checks to see if the player is in the requested group.
      *
      * @param world
      * @param name - Player
@@ -115,14 +115,14 @@ public abstract class PermissionHandler {
     /**
      * Checks to see if a player is in a single group.
      * This does not check inheritance.
-     * 
+     *
      * @param world
      * @param name - Player
      * @param group - Group to be checked
      * @return boolean
      */
     public abstract boolean inSingleGroup(String world, String name, String group);
-    
+
     /**
      * Grabs group prefix, line that comes before the group.
      * <br /><br />
@@ -167,7 +167,7 @@ public abstract class PermissionHandler {
      * @return String. If no string found return "".
      */
     public abstract String getGroupPermissionString(String world, String group, String permission);
-   
+
     /**
      * Get permission nodes from a group that contain values.
      * <br /><br />
@@ -179,18 +179,18 @@ public abstract class PermissionHandler {
      * @return Integer. No integer found return -1.
      */
     public abstract int getGroupPermissionInteger(String world, String group, String permission);
-    
+
     /**
      * Get permission nodes from a group that contain values.
      * <br /><br />
      * Grab Group Permission String values.
-     * 
+     *
      * @param group
      * @param permission
      * @return Boolean. No boolean found return false.
      */
     public abstract boolean getGroupPermissionBoolean(String world, String group, String permission);
-    
+
     /**
      * Get permission nodes from a group that contain values.
      * <br /><br />
@@ -214,7 +214,7 @@ public abstract class PermissionHandler {
      * @return String. If no string found return "".
      */
     public abstract String getUserPermissionString(String world, String name, String permission);
-    
+
     /**
      * Get permission nodes from a specific user that contain values.
      * <br /><br />
@@ -226,7 +226,7 @@ public abstract class PermissionHandler {
      * @return Integer. No integer found return -1.
      */
     public abstract int getUserPermissionInteger(String world, String name, String permission);
-   
+
     /**
      * Get permission nodes from a specific user that contain values.
      * <br /><br />
@@ -301,9 +301,9 @@ public abstract class PermissionHandler {
 
     public abstract void addGroupInfo(String world, String group, String node, Object data);
     public abstract void removeGroupInfo(String world, String group, String node);
-    
+
     public abstract void addUserPermission(String world, String user, String node);
     public abstract void removeUserPermission(String world, String user, String node);
-    
-    
+
+
 }

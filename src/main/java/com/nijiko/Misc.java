@@ -252,10 +252,7 @@ public class Misc {
      * @param name
      */
     public static void touch(File directory, String name) {
-        try {
-            (new File(directory, name)).createNewFile();
-        } catch (IOException ex) {
-        }
+        touch(new File(directory, name));
     }
 
     /**
@@ -264,8 +261,17 @@ public class Misc {
      * @param name
      */
     public static void touch(String name) {
+        touch(new File(name));
+    }
+
+    /**
+     * Create a file through file rather than directory / filename method.
+     *
+     * @param File file
+     */
+    public static void touch(File file) {
         try {
-            (new File(name)).createNewFile();
+            file.createNewFile();
         } catch (IOException ex) {
         }
     }
