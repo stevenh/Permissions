@@ -215,7 +215,7 @@ public class Permissions extends JavaPlugin {
             Messaging.save(player);
         }
 
-        if (commandName.compareToIgnoreCase("permissions") == 0) {
+        if (commandName.equals("permissions")) {
             if (args.length < 1) {
                 PluginDescriptionFile pdfFile = this.getDescription();
                 if (player != null) {

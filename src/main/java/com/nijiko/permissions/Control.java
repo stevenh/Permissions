@@ -148,7 +148,7 @@ public class Control extends PermissionHandler {
     @SuppressWarnings("unused")
     public void load(String world) {
         if( null == world || world.equals("")) {
-            log.log(Level.WARNING, "Load called with empty or null world name" );
+            this.permissionsPlugin.warn("Load called with empty or null world name" );
             return;
         }
 
@@ -165,8 +165,15 @@ public class Control extends PermissionHandler {
         this.WorldConfiguration.put(world, config);
 
         if(!world.equals(this.defaultWorld)) {
-            String copies = config.getString("plugin.permissions.copies", "");
+            String copies = config.getString("plugin.permissions.copies", this.defaultWorld);
             if( !copies.equals("") ) {
+                if ( copies.equals( this.defaultWorld ) ) {
+                    this.permissionsPlugin.info("Using default permissions for world: " + world);
+                }
+                else {
+                    this.permissionsPlugin.info("Using permissions from '" + copies + " for world: " + world);
+
+                }
                 this.WorldInheritance.put(world, copies);
                 return;
             }
