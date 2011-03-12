@@ -17,6 +17,7 @@ import java.util.logging.Level;
 
 import org.bukkit.entity.Player;
 import org.bukkit.util.config.Configuration;
+import org.bukkit.World;
 
 import com.nijiko.Messaging;
 import com.nijikokun.bukkit.Permissions.FileManager;
@@ -88,7 +89,7 @@ public class Control extends PermissionHandler {
         if (this.checkWorld(world)) {
             this.clearCache(world);
 
-            synchronized (Worlds) {
+            synchronized (this.Worlds) {
                 this.Worlds.remove(world);
             }
 
@@ -99,12 +100,18 @@ public class Control extends PermissionHandler {
     }
 
     public void setDefaultWorld(String world) {
-        // log.info("Default world: " + world);
         this.defaultWorld = world;
     }
 
     public boolean loadWorld(String world) {
-        return this.loadWorld( world, false );
+        boolean loaded = this.loadWorld(world, false);
+
+        String parentWorld = this.WorldInheritance.get(world);
+        if( world.equals( parentWorld ) ) {
+            return loaded;
+        }
+
+        return this.loadWorld(parentWorld, false) || loaded;
     }
 
     public void forceLoadWorld(String world) {
@@ -117,7 +124,6 @@ public class Control extends PermissionHandler {
             return true;
         }
 
-        // log.info("World already exists: " + world);
         return false;
     }
 
@@ -127,22 +133,21 @@ public class Control extends PermissionHandler {
 
     public void load() {
         this.load(this.defaultWorld);
+        for ( World world : this.permissionsPlugin.getServer().getWorlds() )
+        {
+            this.loadWorld( world.getName() );
+        }
     }
 
-    private String loadPermWorld( String world ) {
-        if (world.equals(this.defaultWorld)) {
-            return world; // Default world is loaded on init
+    private Configuration loadWordConfig( String world ) {
+        File worldCfgFile = this.permissionsPlugin.getWorldConfigFile( world );
+        if (!worldCfgFile.exists()) {
+            com.nijiko.Misc.touch( worldCfgFile );
         }
+        Configuration config = new Configuration( worldCfgFile );
+        config.load();
 
-        this.loadWorld(world);
-
-        if(this.WorldInheritance.containsKey(world)) {
-            world = this.WorldInheritance.get(world);
-
-            this.loadWorld(world);
-        }
-
-        return world;
+        return config;
     }
 
     @SuppressWarnings("unused")
@@ -152,15 +157,8 @@ public class Control extends PermissionHandler {
             return;
         }
 
-        File worldCfgFile = this.permissionsPlugin.getWorldConfigFile( world );
-        if (!worldCfgFile.exists()) {
-            com.nijiko.Misc.touch( worldCfgFile );
-        }
+        Configuration config = this.loadWordConfig( world );
 
-        Configuration config = new Configuration( worldCfgFile );
-        config.load();
-
-        // log.info("Loading world: " + world);
         this.Worlds.add(world);
         this.WorldConfiguration.put(world, config);
 
@@ -174,6 +172,7 @@ public class Control extends PermissionHandler {
                     this.permissionsPlugin.info("Using permissions from '" + copies + " for world: " + world);
 
                 }
+
                 this.WorldInheritance.put(world, copies);
                 return;
             }
@@ -186,84 +185,54 @@ public class Control extends PermissionHandler {
         this.WorldGroups.put(world, new HashMap<String, Set<String>>());
         this.WorldGroupsData.put(world, new HashMap<String, Object[]>());
         this.WorldGroupsInheritance.put(world, new HashMap<String, Set<String>>());
+        this.WorldInheritance.put(world, world);
 
         // Grab the keys we are going to need
         List<String> userKeys = config.getKeys("users");
         List<String> groupKeys = config.getKeys("groups");
 
-        // Permission set.
-        Set<String> Permissions = new HashSet<String>();
-        Set<String> Inheritance = new HashSet<String>();
-
-        // Permission list
-        List<String> permissions;
-        List<String> inheritance;
-
-        // Group
-        String group;
-
         // log.info("Grabbing group keys for world: " + directory.getPath() + File.separator + world + ".yml");
         // log.info("User keys for world: " + world + " - " + new ArrayList<String>(groupKeys).toString());
+        String worldBase = this.WorldBase.get(world);
         if (groupKeys != null) {
+            Map worldGroups = this.WorldGroups.get(world);
+            Map worldGroupsData = this.WorldGroupsData.get(world);
+            Map worldGroupsInheritance = this.WorldGroupsInheritance.get(world);
             for (String key : groupKeys) {
-                Inheritance = new HashSet<String>();
-                Permissions = new HashSet<String>();
-
-                // Configuration
-                inheritance = config.getStringList("groups." + key + ".inheritance", null);
-                permissions = config.getStringList("groups." + key + ".permissions", null);
-                boolean Default = config.getBoolean("groups." + key + ".default", false);
+                String group = key.toLowerCase();
+                List<String> inheritanceList = config.getStringList("groups." + key + ".inheritance", null);
+                List<String> permissionsList = config.getStringList("groups." + key + ".permissions", null);
                 String prefix = config.getString("groups." + key + ".info.prefix", null);
                 String suffix = config.getString("groups." + key + ".info.suffix", null);
                 boolean build = config.getBoolean("groups." + key + ".info.build", false);
 
-                if (Default && (this.WorldBase.get(world) == null ? "" == null : this.WorldBase.get(world).equals(""))) {
-                    this.WorldBase.put(world, key.toLowerCase());
+
+                if (config.getBoolean("groups." + key + ".default", false) && ( null == worldBase || worldBase.equals(""))) {
+                    worldBase = key.toLowerCase();
+                    this.WorldBase.put(world, worldBase);
                 }
 
-                if (inheritance.size() > 0) {
-                    Inheritance.addAll(inheritance);
+                if (inheritanceList.size() > 0) {
+                    worldGroupsInheritance.put(group, new HashSet<String>(inheritanceList));
                 }
 
-                if (permissions.size() > 0) {
-                    Permissions.addAll(permissions);
-                }
-
-                // log.info("Updating group data for world: " + directory.getPath() + File.separator + world + ".yml");
-                // log.info("Permissions For Group: " + key + " - " + new ArrayList<String>(Permissions).toString());
-                this.WorldGroups.get(world).put(key.toLowerCase(), Permissions);
-                this.WorldGroupsData.get(world).put(key.toLowerCase(), new Object[]{key, prefix, suffix, build});
-                // log.info("Updated group data for world: " + directory.getPath() + world + ".yml");
-
-                if (Inheritance.size() > 0) {
-                   this.WorldGroupsInheritance.get(world).put(key.toLowerCase(), Inheritance);
-                }
+                worldGroups.put(group, new HashSet<String>(permissionsList));
+                worldGroupsData.put(group, new Object[]{key, prefix, suffix, build});
             }
         }
 
         // log.info("Grabbing userkeys for world: " + directory.getPath() + File.separator + world + ".yml");
         // log.info("User keys for world: " + world + " - " + new ArrayList<String>(userKeys).toString());
         if (userKeys != null) {
+            Map worldUserGroups = this.WorldUserGroups.get(world);
+            Map worldPermissions = this.WorldUserPermissions.get(world);
             for (String key : userKeys) {
-                Permissions = new HashSet<String>();
-
                 // Configuration
-                permissions = config.getStringList("users." + key + ".permissions", null);
-                group = config.getString("users." + key + ".group");
-
-                if (group != null) {
-                    if (!group.isEmpty()) {
-                        this.WorldUserGroups.get(world).put(key.toLowerCase(), group);
-                    }
-                } else {
-                    this.WorldUserGroups.get(world).put(key.toLowerCase(), this.WorldBase.get(world));
-                }
-
-                if (permissions.size() > 0) {
-                    Permissions.addAll(permissions);
-                }
-
-                this.WorldUserPermissions.get(world).put(key.toLowerCase(), Permissions);
+                List<String> permissionsList = config.getStringList("users." + key + ".permissions", null);
+                String group = config.getString("users." + key + ".group");
+                String user = key.toLowerCase();
+                worldUserGroups.put(user, ( null != group && !group.isEmpty() ) ? group : worldBase );
+                worldPermissions.put(user, new HashSet<String>(permissionsList) );
             }
         }
 
@@ -324,8 +293,7 @@ public class Control extends PermissionHandler {
             return true;
         }
 
-        // Load if it isn't already
-        world = this.loadPermWorld(world);
+        world = this.WorldInheritance.get(world);
 
         if (this.WorldCache.get(world).containsKey(name + "," + permission)) {
             // log.info("World contained cached node " + permission + ": " + world);
@@ -341,7 +309,7 @@ public class Control extends PermissionHandler {
 
         // log.info("Checking for the node " + permission + " in the world: " + world);
 
-        if (this.WorldUserPermissions.get(world).containsKey(name)) {
+        if (UserPermissions.containsKey(name)) {
             Permissions = UserPermissions.get(name);
             group = UserGroups.get(name).toLowerCase();
 
@@ -455,8 +423,6 @@ public class Control extends PermissionHandler {
             for (String inherited : Inheritance) {
                 inherited = inherited.toLowerCase();
                 Set<String> GroupPermissions = Groups.get(inherited.toLowerCase());
-                Set<String> GottenInheritance = getInheritance(world, inherited);
-
                 if (GroupPermissions == null) {
                     continue;
                 }
@@ -467,7 +433,7 @@ public class Control extends PermissionHandler {
 
                 if (!Checked.contains(inherited)) {
                     Checked.add(inherited);
-                    Object[] InheritedPermissions = getInheritancePermissions(world, Permissions, GottenInheritance, Checked, inherited);
+                    Object[] InheritedPermissions = getInheritancePermissions(world, Permissions, getInheritance(world, inherited), Checked, inherited);
 
                     if (((Set<String>) InheritedPermissions[0]).size() > 0) {
                         Permissions.addAll((Set<String>) InheritedPermissions[0]);
@@ -521,7 +487,7 @@ public class Control extends PermissionHandler {
     }
 
     public boolean inGroup(String world, String name, String group) {
-        world = this.loadPermWorld(world);
+        world = this.WorldInheritance.get(world);
 
         name = name.toLowerCase();
         group = group.toLowerCase();
@@ -556,7 +522,7 @@ public class Control extends PermissionHandler {
     }
 
     public String getGroup(String world, String name) {
-        world = this.loadPermWorld(world);
+        world = this.WorldInheritance.get(world);
         name = name.toLowerCase();
 
         if (this.WorldUserPermissions.get(world).containsKey(name) && this.WorldUserGroups.get(world).containsKey(name)) {
@@ -570,7 +536,7 @@ public class Control extends PermissionHandler {
     }
 
     public String getGroupPrefix(String world, String group) {
-        world = this.loadPermWorld(world);
+        world = this.WorldInheritance.get(world);
         group = group.toLowerCase();
 
         if (this.WorldGroups.get(world).containsKey(group)) {
@@ -581,7 +547,7 @@ public class Control extends PermissionHandler {
     }
 
     public String getGroupSuffix(String world, String group) {
-        world = this.loadPermWorld(world);
+        world = this.WorldInheritance.get(world);
         group = group.toLowerCase();
 
         if (this.WorldGroups.get(world).containsKey(group)) {
@@ -592,7 +558,7 @@ public class Control extends PermissionHandler {
     }
 
     public boolean canGroupBuild(String world, String group) {
-        world = this.loadPermWorld(world);
+        world = this.WorldInheritance.get(world);
         group = group.toLowerCase();
 
         if (this.WorldGroups.get(world).containsKey(group)) {
@@ -605,7 +571,7 @@ public class Control extends PermissionHandler {
    }
 
     public String[] getGroups(String world, String name) {
-        world = this.loadPermWorld(world);
+        world = this.WorldInheritance.get(world);
         String Group = (String) this.WorldUserGroups.get(world).get(name.toLowerCase());
         if (Group == null) {
             Group = (String) ((Object[]) this.WorldGroupsData.get(world).get(this.WorldBase.get(world)))[0];
@@ -617,7 +583,7 @@ public class Control extends PermissionHandler {
     }
 
     public void setCache(String world, Map<String, Boolean> Cache) {
-        world = this.loadPermWorld(world);
+        world = this.WorldInheritance.get(world);
 
         if(this.checkWorld(world)) {
             this.WorldCache.put(world, Cache);
@@ -625,7 +591,7 @@ public class Control extends PermissionHandler {
     }
 
     public void setCacheItem(String world, String player, String permission, boolean data) {
-        world = this.loadPermWorld(world);
+        world = this.WorldInheritance.get(world);
 
         if(this.checkWorld(world)) {
             this.WorldCache.get(world).put(player + "," + permission, data);
@@ -633,7 +599,7 @@ public class Control extends PermissionHandler {
     }
 
     public Map<String, Boolean> getCache(String world) {
-        world = this.loadPermWorld(world);
+        world = this.WorldInheritance.get(world);
 
         if(this.checkWorld(world)) {
             return this.WorldCache.get(world);
@@ -643,7 +609,7 @@ public class Control extends PermissionHandler {
     }
 
     public boolean getCacheItem(String world, String player, String permission) {
-        world = this.loadPermWorld(world);
+        world = this.WorldInheritance.get(world);
 
         if(this.checkWorld(world)&& this.WorldCache.get(world).containsKey(player + "," + permission)) {
             return this.WorldCache.get(world).get(player + "," + permission);
@@ -653,7 +619,7 @@ public class Control extends PermissionHandler {
     }
 
     public void removeCachedItem(String world, String player, String permission) {
-        world = this.loadPermWorld(world);
+        world = this.WorldInheritance.get(world);
 
         if(this.checkWorld(world) && this.WorldCache.get(world).containsKey(player + "," + permission)) {
             this.WorldCache.get(world).remove(player + "," + permission);
@@ -671,17 +637,14 @@ public class Control extends PermissionHandler {
     }
 
     public void clearCache(String world) {
-        if(this.WorldInheritance.containsKey(world) && !world.equals(this.defaultWorld)) {
-            world = this.WorldInheritance.get(world);
-        }
-
+        world = this.WorldInheritance.get(world);
         if(this.checkWorld(world)) {
             this.WorldCache.put(world, new HashMap<String, Boolean>());
         }
     }
 
     public void addGroupPermission(String world, String group, String node) {
-        world = this.loadPermWorld(world);
+        world = this.WorldInheritance.get(world);
 
         List<String> list = this.WorldConfiguration.get(world).getStringList("groups." + group + ".permissions", new LinkedList<String>());
         list.add(node);
@@ -689,7 +652,7 @@ public class Control extends PermissionHandler {
     }
 
     public void removeGroupPermission(String world, String group, String node) {
-        world = this.loadPermWorld(world);
+        world = this.WorldInheritance.get(world);
 
         List<String> list = this.WorldConfiguration.get(world).getStringList("groups." + group + ".permissions", new LinkedList<String>());
 
@@ -701,19 +664,19 @@ public class Control extends PermissionHandler {
     }
 
     public void addGroupInfo(String world, String group, String node, Object data) {
-        world = this.loadPermWorld(world);
+        world = this.WorldInheritance.get(world);
 
         this.WorldConfiguration.get(world).setProperty("groups." + group + ".info." + node, data);
     }
 
     public void removeGroupInfo(String world, String group, String node) {
-        world = this.loadPermWorld(world);
+        world = this.WorldInheritance.get(world);
 
         this.WorldConfiguration.get(world).removeProperty("groups." + group + ".info." + node);
     }
 
     public void addUserPermission(String world, String user, String node) {
-        world = this.loadPermWorld(world);
+        world = this.WorldInheritance.get(world);
 
         List<String> list = this.WorldConfiguration.get(world).getStringList("users." + user + ".permissions", new LinkedList<String>());
         list.add(node);
@@ -721,7 +684,7 @@ public class Control extends PermissionHandler {
     }
 
     public void removeUserPermission(String world, String user, String node) {
-        world = this.loadPermWorld(world);
+        world = this.WorldInheritance.get(world);
 
         List<String> list = this.WorldConfiguration.get(world).getStringList("users." + user + ".permissions", new LinkedList<String>());
 
@@ -733,67 +696,67 @@ public class Control extends PermissionHandler {
     }
 
     public void addUserInfo(String world, String user, String node, Object data) {
-        world = this.loadPermWorld(world);
+        world = this.WorldInheritance.get(world);
 
         this.WorldConfiguration.get(world).setProperty("users." + user + ".info." + node, data);
     }
 
     public void removeUserInfo(String world, String user, String node) {
-        world = this.loadPermWorld(world);
+        world = this.WorldInheritance.get(world);
 
         this.WorldConfiguration.get(world).removeProperty("users." + user + ".info." + node);
     }
 
     public String getGroupPermissionString(String world, String group, String permission) {
-        world = this.loadPermWorld(world);
+        world = this.WorldInheritance.get(world);
 
         return this.WorldConfiguration.get(world).getString("groups." + group + ".info." + permission, "");
     }
 
     public int getGroupPermissionInteger(String world, String group, String permission) {
-        world = this.loadPermWorld(world);
+        world = this.WorldInheritance.get(world);
 
         return this.WorldConfiguration.get(world).getInt("groups." + group + ".info." + permission, -1);
     }
 
     public boolean getGroupPermissionBoolean(String world, String group, String permission) {
-        world = this.loadPermWorld(world);
+        world = this.WorldInheritance.get(world);
 
         return this.WorldConfiguration.get(world).getBoolean("groups." + group + ".info." + permission, false);
     }
 
     public double getGroupPermissionDouble(String world, String group, String permission) {
-        world = this.loadPermWorld(world);
+        world = this.WorldInheritance.get(world);
 
         return this.WorldConfiguration.get(world).getDouble("groups." + group + ".info." + permission, -1.0);
     }
 
     public String getUserPermissionString(String world, String name, String permission) {
-        world = this.loadPermWorld(world);
+        world = this.WorldInheritance.get(world);
 
         return this.WorldConfiguration.get(world).getString("users." + name + ".info." + permission, "");
     }
 
     public int getUserPermissionInteger(String world, String name, String permission) {
-        world = this.loadPermWorld(world);
+        world = this.WorldInheritance.get(world);
 
         return this.WorldConfiguration.get(world).getInt("users." + name + ".info." + permission, -1);
     }
 
     public boolean getUserPermissionBoolean(String world, String name, String permission) {
-        world = this.loadPermWorld(world);
+        world = this.WorldInheritance.get(world);
 
         return this.WorldConfiguration.get(world).getBoolean("users." + name + ".info." + permission, false);
     }
 
     public double getUserPermissionDouble(String world, String name, String permission) {
-        world = this.loadPermWorld(world);
+        world = this.WorldInheritance.get(world);
 
         return this.WorldConfiguration.get(world).getDouble("users." + name + ".info." + permission, -1.0);
     }
 
     public String getPermissionString(String world, String name, String permission) {
-        world = this.loadPermWorld(world);
+        world = this.WorldInheritance.get(world);
 
         String group = this.getGroup(world, name);
         String userPermission = this.getUserPermissionString(world, name, permission);
@@ -811,7 +774,7 @@ public class Control extends PermissionHandler {
     }
 
     public boolean getPermissionBoolean(String world, String name, String permission) {
-        world = this.loadPermWorld(world);
+        world = this.WorldInheritance.get(world);
         String group = this.getGroup(world, name);
         boolean userPermission = this.getUserPermissionBoolean(world, name, permission);
         boolean userGroupPermission = false;
@@ -829,7 +792,7 @@ public class Control extends PermissionHandler {
 
     @SuppressWarnings("null")
     public int getPermissionInteger(String world, String name, String permission) {
-        world = this.loadPermWorld(world);
+        world = this.WorldInheritance.get(world);
 
         String group = this.getGroup(world, name);
         int userPermission = this.getUserPermissionInteger(world, name, permission);
@@ -847,7 +810,7 @@ public class Control extends PermissionHandler {
     }
 
     public double getPermissionDouble(String world, String name, String permission) {
-        world = this.loadPermWorld(world);
+        world = this.WorldInheritance.get(world);
 
         String group = this.getGroup(world, name);
         double userPermission = this.getUserPermissionDouble(world, name, permission);

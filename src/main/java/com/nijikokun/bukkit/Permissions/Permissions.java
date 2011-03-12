@@ -16,9 +16,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
+import org.bukkit.event.world.WorldEvent;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.World;
 
 import com.nijiko.Messaging;
 import com.nijiko.Misc;
@@ -202,8 +204,13 @@ public class Permissions extends JavaPlugin {
         PluginManager pluginManager = this.getServer().getPluginManager();
         pluginManager.registerEvent(Event.Type.BLOCK_PLACED, l, Priority.High, this);
         pluginManager.registerEvent(Event.Type.BLOCK_BREAK, l, Priority.High, this);
+        pluginManager.registerEvent(Event.Type.WORLD_LOADED, l, Priority.High, this);
 
         this.info("v" + description.getVersion() + " (" + codename + ") enabled");
+    }
+
+    public void onWorldLoaded(WorldEvent event) {
+        Security.loadWorld( event.getWorld().getName() );
     }
 
     public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
