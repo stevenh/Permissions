@@ -43,11 +43,17 @@ public abstract class PermissionHandler {
     public abstract boolean reload(String world);
 
     // Cache
+    public abstract void setCache(Map<String, Boolean> Cache);
     public abstract void setCache(String world, Map<String, Boolean> Cache);
+    public abstract void setCacheItem(String player, String permission, boolean data);
     public abstract void setCacheItem(String world, String player, String permission, boolean data);
+    public abstract Map<String, Boolean> getCache();
     public abstract Map<String, Boolean> getCache(String world);
+    public abstract boolean getCacheItem(String player, String permission);
     public abstract boolean getCacheItem(String world, String player, String permission);
+    public abstract void removeCachedItem(String player, String permission);
     public abstract void removeCachedItem(String world, String player, String permission);
+    public abstract void clearCache();
     public abstract void clearCache(String world);
     public abstract void clearAllCache();
 
@@ -91,6 +97,8 @@ public abstract class PermissionHandler {
      * @return String
      */
     public abstract String getGroup(String world, String name);
+    @Deprecated
+    public abstract String getGroup(String name);
 
 
     /**
@@ -101,6 +109,8 @@ public abstract class PermissionHandler {
      * @return Array
      */
     public abstract String[] getGroups(String world, String name);
+    @Deprecated
+    public abstract String[] getGroups(String name);
 
     /**
      * Checks to see if the player is in the requested group.
@@ -111,6 +121,8 @@ public abstract class PermissionHandler {
      * @return boolean
      */
     public abstract boolean inGroup(String world, String name, String group);
+    @Deprecated
+    public abstract boolean inGroup(String name, String group);
 
     /**
      * Checks to see if a player is in a single group.
@@ -133,6 +145,8 @@ public abstract class PermissionHandler {
      * @return String
      */
     public abstract String getGroupPrefix(String world, String group);
+    @Deprecated
+    public abstract String getGroupPrefix(String group);
 
     /**
      * Grabs group suffix, line that comes after the group.
@@ -144,6 +158,8 @@ public abstract class PermissionHandler {
      * @return String
      */
     public abstract String getGroupSuffix(String world, String group);
+    @Deprecated
+    public abstract String getGroupSuffix(String group);
 
     /**
      * Checks to see if the group has build permission.
@@ -155,6 +171,8 @@ public abstract class PermissionHandler {
      * @return String
      */
     public abstract boolean canGroupBuild(String world, String group);
+    @Deprecated
+    public abstract boolean canGroupBuild(String group);
 
     /**
      * Get permission nodes from a group that contain values.
@@ -167,6 +185,8 @@ public abstract class PermissionHandler {
      * @return String. If no string found return "".
      */
     public abstract String getGroupPermissionString(String world, String group, String permission);
+    @Deprecated
+    public abstract String getGroupPermissionString(String group, String permission);
 
     /**
      * Get permission nodes from a group that contain values.
@@ -179,6 +199,8 @@ public abstract class PermissionHandler {
      * @return Integer. No integer found return -1.
      */
     public abstract int getGroupPermissionInteger(String world, String group, String permission);
+    @Deprecated
+    public abstract int getGroupPermissionInteger(String group, String permission);
 
     /**
      * Get permission nodes from a group that contain values.
@@ -190,6 +212,8 @@ public abstract class PermissionHandler {
      * @return Boolean. No boolean found return false.
      */
     public abstract boolean getGroupPermissionBoolean(String world, String group, String permission);
+    @Deprecated
+    public abstract boolean getGroupPermissionBoolean(String group, String permission);
 
     /**
      * Get permission nodes from a group that contain values.
@@ -202,6 +226,8 @@ public abstract class PermissionHandler {
      * @return Double. No value found return -1.0
      */
     public abstract double getGroupPermissionDouble(String world, String group, String permission);
+    @Deprecated
+    public abstract double getGroupPermissionDouble(String group, String permission);
 
     /**
      * Get permission nodes from a specific user that contain values.
@@ -214,6 +240,8 @@ public abstract class PermissionHandler {
      * @return String. If no string found return "".
      */
     public abstract String getUserPermissionString(String world, String name, String permission);
+    @Deprecated
+    public abstract String getUserPermissionString(String name, String permission);
 
     /**
      * Get permission nodes from a specific user that contain values.
@@ -226,6 +254,8 @@ public abstract class PermissionHandler {
      * @return Integer. No integer found return -1.
      */
     public abstract int getUserPermissionInteger(String world, String name, String permission);
+    @Deprecated
+    public abstract int getUserPermissionInteger(String name, String permission);
 
     /**
      * Get permission nodes from a specific user that contain values.
@@ -238,6 +268,8 @@ public abstract class PermissionHandler {
      * @return Boolean. No boolean found return false.
      */
     public abstract boolean getUserPermissionBoolean(String world, String name, String permission);
+    @Deprecated
+    public abstract boolean getUserPermissionBoolean(String name, String permission);
 
     /**
      * Get permission nodes from a specific user that contain values.
@@ -250,6 +282,8 @@ public abstract class PermissionHandler {
      * @return Double. No value found return -1.0
      */
     public abstract double getUserPermissionDouble(String world, String name, String permission);
+    @Deprecated
+    public abstract double getUserPermissionDouble(String name, String permission);
 
     /**
      * Get permission nodes from a user / group that contain values.
@@ -262,6 +296,8 @@ public abstract class PermissionHandler {
      * @return String. If no string found return "".
      */
     public abstract String getPermissionString(String world, String name, String permission);
+    @Deprecated
+    public abstract String getPermissionString(String name, String permission);
 
     /**
      * Get permission nodes from a user / group that contain values.
@@ -274,6 +310,8 @@ public abstract class PermissionHandler {
      * @return Integer. No integer found return -1.
      */
     public abstract int getPermissionInteger(String world, String name, String permission);
+    @Deprecated
+    public abstract int getPermissionInteger(String name, String permission);
 
     /**
      * Get permission nodes from a user / group that contain values.
@@ -286,6 +324,8 @@ public abstract class PermissionHandler {
      * @return Boolean. No boolean found return false.
      */
     public abstract boolean getPermissionBoolean(String world, String name, String permission);
+    @Deprecated
+    public abstract boolean getPermissionBoolean(String name, String permission);
 
     /**
      * Get permission nodes from a user / group that contain values.
@@ -298,6 +338,8 @@ public abstract class PermissionHandler {
      * @return Double. No value found return -1.0
      */
     public abstract double getPermissionDouble(String world, String name, String permission);
+    @Deprecated
+    public abstract double getPermissionDouble(String name, String permission);
 
     public abstract void addGroupInfo(String world, String group, String node, Object data);
     public abstract void removeGroupInfo(String world, String group, String node);

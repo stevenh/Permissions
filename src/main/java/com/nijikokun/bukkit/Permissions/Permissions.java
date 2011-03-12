@@ -56,7 +56,7 @@ public class Permissions extends JavaPlugin {
     public static Server Server = null;
     public File directory;
     private DefaultConfiguration config;
-    public static String codename = "Cluricaun";
+    public static String codename = "MultiplayCompat";
     private static final String defaultConfig = "config";
     private String name;
 
