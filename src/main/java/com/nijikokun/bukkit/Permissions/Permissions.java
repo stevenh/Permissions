@@ -133,6 +133,8 @@ public class Permissions extends JavaPlugin {
         log.info("[Permissions] (" + codename + ") was Initialized.");
     }
     
+    public void onLoad() {
+    }
 
     public void onDisable() {
     	log.info("[Permissions] (" + codename + ") disabled successfully.");
