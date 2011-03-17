@@ -51,9 +51,13 @@ public class Permissions extends JavaPlugin {
     public static Server Server = null;
     public File directory;
     private DefaultConfiguration config;
+<<<<<<< HEAD
     public static String name = "Permissions";
-    public static String version = "2.5.5";
+    public static String version = "2.5.4";
     public static String codename = "Phoenix";
+=======
+    public static String codename = "Cluricaun";
+>>>>>>> 24add44a0b293914889e7e45778a738074ffcc1d
     
     
     public Listener l = new Listener(this);
@@ -132,12 +136,14 @@ public class Permissions extends JavaPlugin {
         setupPermissions();
 
         // Enabled
-        log.info("[" + name + "] version [" + version + "] (" + codename + ") was Initialized.");
+        log.info("[Permissions] (" + codename + ") was Initialized.");
     }
     
+    public void onLoad() {
+    }
 
     public void onDisable() {
-    	log.info("[" + name + "] version [" + version + "] (" + codename + ") disabled successfully.");
+    	log.info("[Permissions] (" + codename + ") disabled successfully.");
     	return;
     }
 
@@ -175,7 +181,6 @@ public class Permissions extends JavaPlugin {
 
         // Attempt
         if (!(new File(getDataFolder(), DefaultWorld + ".yml").exists())) {
-        	log.info("[Permissions] Created new empty world file in " + directory.getPath() + "named " + DefaultWorld + ".yml");
             com.nijiko.Misc.touch(getDataFolder() + DefaultWorld + ".yml");
         }
 
