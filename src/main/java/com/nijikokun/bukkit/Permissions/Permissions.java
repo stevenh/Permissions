@@ -51,13 +51,9 @@ public class Permissions extends JavaPlugin {
     public static Server Server = null;
     public File directory;
     private DefaultConfiguration config;
-<<<<<<< HEAD
     public static String name = "Permissions";
     public static String version = "2.5.4";
     public static String codename = "Phoenix";
-=======
-    public static String codename = "Cluricaun";
->>>>>>> 24add44a0b293914889e7e45778a738074ffcc1d
     
     
     public Listener l = new Listener(this);
