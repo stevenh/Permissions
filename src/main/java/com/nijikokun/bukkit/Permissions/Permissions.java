@@ -195,7 +195,7 @@ public class Permissions extends JavaPlugin {
         // Enabled
         log.info("[" + description.getName() + "] version [" + description.getVersion() + "] (" + codename + ")  loaded");
         
-        this.getServer().getPluginManager().registerEvent(Event.Type.BLOCK_PLACED, l, Priority.High, this);
+        this.getServer().getPluginManager().registerEvent(Event.Type.BLOCK_PLACE, l, Priority.High, this);
         this.getServer().getPluginManager().registerEvent(Event.Type.BLOCK_BREAK, l, Priority.High, this);
     }
     
