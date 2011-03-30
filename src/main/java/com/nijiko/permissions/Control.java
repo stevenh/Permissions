@@ -766,7 +766,7 @@ public class Control extends PermissionHandler {
             this.WorldCache.put(world, new HashMap<String, Boolean>());
         }
     }
-    
+    //Fixed functions by rcjrrjcr
     public void addGroupPermission(String world, String group, String node) {
         this.loadWorld(world);
 
@@ -779,6 +779,12 @@ public class Control extends PermissionHandler {
         List<String> list = this.WorldConfiguration.get(world).getStringList("groups." + group + ".permissions", new LinkedList<String>());
         list.add(node);
         this.WorldConfiguration.get(world).setProperty("groups." + group + ".permissions", list);
+        //MODIFICATION START
+        Set<String> groupPerms = this.WorldGroups.get(world).get(group);
+        if(groupPerms==null) groupPerms = new HashSet<String>();
+        groupPerms.add(node);
+        this.WorldGroups.get(world).put(group, groupPerms);
+        //MODIFICATION END
     }
     
     public void removeGroupPermission(String world, String group, String node) {
@@ -797,6 +803,12 @@ public class Control extends PermissionHandler {
         }
         
         this.WorldConfiguration.get(world).setProperty("groups." + group + ".permissions", list);
+        //MODIFICATION START
+        Set<String> groupPerms = this.WorldGroups.get(world).get(group);
+        if(groupPerms==null) groupPerms = new HashSet<String>();
+        groupPerms.remove(node);
+        this.WorldGroups.get(world).put(group, groupPerms);
+        //MODIFICATION END
     }
     
     public void addGroupInfo(String world, String group, String node, Object data) {
@@ -809,6 +821,18 @@ public class Control extends PermissionHandler {
         }
 
         this.WorldConfiguration.get(world).setProperty("groups." + group + ".info." + node, data);
+        //MODIFICATION START
+        Object[] groupData = this.WorldGroupsData.get(world).get(group);
+        if(groupData == null) groupData = new Object[]{group,"","",true};
+//        if(groupData.length==4) return;
+        if(data instanceof Boolean && node.equals("build")) groupData[3] = data;
+        else if (data instanceof String)
+        {
+        	if(node.equals("prefix")) groupData[1]= data;
+        	else if(node.equals("suffix")) groupData[2]= data;
+        }
+        this.WorldGroupsData.get(world).put(group, groupData);
+        //MODIFICATION END
     }
     
     public void removeGroupInfo(String world, String group, String node) {
@@ -821,6 +845,16 @@ public class Control extends PermissionHandler {
         }
 
         this.WorldConfiguration.get(world).removeProperty("groups." + group + ".info." + node);
+        
+        //MODIFICATION START
+        Object[] groupData = this.WorldGroupsData.get(world).get(group);
+        if(groupData == null) groupData = new Object[]{group,"","",true};
+//        if(groupData.length==4) return;
+        if(node.equals("build")) groupData[3] = true;
+        else if(node.equals("prefix")) groupData[1]= "";
+        else if(node.equals("suffix")) groupData[2]= "";
+        this.WorldGroupsData.get(world).put(group, groupData);
+        //MODIFICATION END
     }
     
     public void addUserPermission(String world, String user, String node) {
@@ -833,8 +867,15 @@ public class Control extends PermissionHandler {
         }
 
         List<String> list = this.WorldConfiguration.get(world).getStringList("users." + user + ".permissions", new LinkedList<String>());
-        list.add(node);
+        list.add(node);		
         this.WorldConfiguration.get(world).setProperty("users." + user + ".permissions", list);
+        
+        //MODIFICATION START
+        Set<String> userPerms = this.WorldUserPermissions.get(world).get(user);
+        if(userPerms==null) userPerms = new HashSet<String>();
+        userPerms.add(node);
+        this.WorldGroups.get(world).put(user, userPerms);
+        //MODIFICATION END
     }
     
     public void removeUserPermission(String world, String user, String node) {
@@ -853,8 +894,15 @@ public class Control extends PermissionHandler {
         }
         
         this.WorldConfiguration.get(world).setProperty("users." + user + ".permissions", list);
+        
+        //MODIFICATION START
+        Set<String> userPerms = this.WorldUserPermissions.get(world).get(user);
+        if(userPerms==null) userPerms = new HashSet<String>();
+        userPerms.remove(node);
+        this.WorldGroups.get(world).put(user, userPerms);
+        //MODIFICATION END
     }
-    
+    //End of fixes by rcjrrjcr
     public void addUserInfo(String world, String user, String node, Object data) {
         this.loadWorld(world);
 
@@ -1073,4 +1121,20 @@ public class Control extends PermissionHandler {
 
         return userGroupPermission;
     }
+	//Addition by rcjrrjcr
+    @Override
+    public void save(String world)
+    {
+    	Configuration worldConfig = this.WorldConfiguration.get(world);
+    	if(worldConfig!=null) worldConfig.save();
+    }
+
+	@Override
+	public void saveAll() {
+		for(Configuration worldConfig : this.WorldConfiguration.values())
+		{
+			worldConfig.save();
+		}
+	}
+	//End of addition by rcjrrjcr
 }
