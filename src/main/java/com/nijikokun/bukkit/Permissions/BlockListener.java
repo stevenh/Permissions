@@ -4,7 +4,6 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.block.BlockListener;
 import com.nijikokun.bukkit.Permissions.Permissions;
 
 /**
@@ -26,11 +25,11 @@ import com.nijikokun.bukkit.Permissions.Permissions;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class Listener extends BlockListener {
+public class BlockListener extends org.bukkit.event.block.BlockListener {
     @SuppressWarnings("unused")
     private final Permissions plugin;
 
-    public Listener(final Permissions plugin) {
+    public BlockListener(final Permissions plugin) {
         this.plugin = plugin;
     }
 

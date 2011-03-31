@@ -61,7 +61,8 @@ public class Permissions extends JavaPlugin {
     private String name;
 
 
-    public Listener l = new Listener(this);
+    public BlockListener blockListener = new BlockListener(this);
+    public WorldListener worldListener = new WorldListener(this);
 
     /**
      * Controller for permissions and security.
@@ -202,15 +203,11 @@ public class Permissions extends JavaPlugin {
 
         // Enabled
         PluginManager pluginManager = this.getServer().getPluginManager();
-        pluginManager.registerEvent(Event.Type.BLOCK_PLACED, l, Priority.High, this);
-        pluginManager.registerEvent(Event.Type.BLOCK_BREAK, l, Priority.High, this);
-        pluginManager.registerEvent(Event.Type.WORLD_LOADED, l, Priority.High, this);
+        pluginManager.registerEvent(Event.Type.BLOCK_PLACED, blockListener, Priority.High, this);
+        pluginManager.registerEvent(Event.Type.BLOCK_BREAK, blockListener, Priority.High, this);
+        pluginManager.registerEvent(Event.Type.WORLD_LOADED, worldListener, Priority.High, this);
 
         this.info("v" + description.getVersion() + " (" + codename + ") enabled");
-    }
-
-    public void onWorldLoaded(WorldEvent event) {
-        Security.loadWorld( event.getWorld().getName() );
     }
 
     public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
