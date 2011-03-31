@@ -27,52 +27,52 @@ import com.nijikokun.bukkit.Permissions.Permissions;
  */
 
 public class Listener extends BlockListener {
-	@SuppressWarnings("unused")
-	private final Permissions plugin;
-	
-	public Listener(final Permissions plugin) {
-		this.plugin = plugin;
-	}
+    @SuppressWarnings("unused")
+    private final Permissions plugin;
 
-	@Override
-	public void onBlockPlace(BlockPlaceEvent event) {
-		final Player player = event.getPlayer();
+    public Listener(final Permissions plugin) {
+        this.plugin = plugin;
+    }
+
+    @Override
+    public void onBlockPlace(BlockPlaceEvent event) {
+        final Player player = event.getPlayer();
         final World world;
-        
+
         world = player.getWorld();
-		String[] groups = Permissions.Security.getGroups(world.getName(), player.getName());
-		int build = 0;
-		
-		for (String group : groups) {
-			if (!Permissions.Security.canGroupBuild(world.getName(), group)) {
-				build++;
-			}
-		}
-		
-		if (build == groups.length) {
-			event.setBuild(false);
-			return;
-		}
-	}
-	
-	@Override
-	public void onBlockBreak(BlockBreakEvent event) {
-		final Player player = event.getPlayer();
+        String[] groups = Permissions.Security.getGroups(world.getName(), player.getName());
+        int build = 0;
+
+        for (String group : groups) {
+            if (!Permissions.Security.canGroupBuild(world.getName(), group)) {
+                build++;
+            }
+        }
+
+        if (build == groups.length) {
+            event.setBuild(false);
+            return;
+        }
+    }
+
+    @Override
+    public void onBlockBreak(BlockBreakEvent event) {
+        final Player player = event.getPlayer();
         final World world;
-        
+
         world = player.getWorld();
-		String[] groups = Permissions.Security.getGroups(world.getName(), player.getName());
-		int build = 0;
-		
-		for (String group : groups) {
-			if (!Permissions.Security.canGroupBuild(world.getName(), group)) {
-				build++;
-			}
-		}
-		
-		if (build == groups.length) {
-			event.setCancelled(true);
-			return;
-		}
-	}
+        String[] groups = Permissions.Security.getGroups(world.getName(), player.getName());
+        int build = 0;
+
+        for (String group : groups) {
+            if (!Permissions.Security.canGroupBuild(world.getName(), group)) {
+                build++;
+            }
+        }
+
+        if (build == groups.length) {
+            event.setCancelled(true);
+            return;
+        }
+    }
 }
