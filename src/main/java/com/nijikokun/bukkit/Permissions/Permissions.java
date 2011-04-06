@@ -139,6 +139,11 @@ public class Permissions extends JavaPlugin {
     }
 
     public void onDisable() {
+    	//Addition by rcjrrjcr
+    	Security.saveAll();
+    	log.info("[Permissions] (" + codename + ") saved all data.");
+    	//End of addition by rcjrrjcr
+    	
     	log.info("[Permissions] (" + codename + ") disabled successfully.");
     	return;
     }

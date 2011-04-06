@@ -304,6 +304,10 @@ public abstract class PermissionHandler {
     
     public abstract void addUserPermission(String world, String user, String node);
     public abstract void removeUserPermission(String world, String user, String node);
-    
+
+	//Addition by rcjrrjcr
+    public abstract void save(String world);
+    public abstract void saveAll();
+	//End of addition by rcjrrjcr
     
 }
