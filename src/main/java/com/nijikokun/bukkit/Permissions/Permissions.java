@@ -99,6 +99,7 @@ public class Permissions extends JavaPlugin {
         					}
         				}
         				Misc.delete("plugins" + File.separator + "Permissions" + File.separator + "world.yml");
+        				log.info("[Permissions] Invalid config file found and converted to proper name/format.");
         			}
         		}
         		else if (new File("plugins" + File.separator + "Permissions", "config.yml").exists()) {
@@ -119,10 +120,9 @@ public class Permissions extends JavaPlugin {
         				}
         			}
         			Misc.delete("plugins" + File.separator + "Permissions" + File.separator + "config.yml");
+        			log.info("[Permissions] Invalid config file found and converted to proper name/format.");
         		}           
         	}
-        	log.info("Invalid config file found and converted to proper name/format.");
-        	
         } catch (IOException e) {
         	e.printStackTrace();
         }
@@ -198,9 +198,6 @@ public class Permissions extends JavaPlugin {
 
         // Load Configuration Settings
         this.config.load();
-
-        // Setup Permission
-        //setupPermissions();
 
         // Enabled
         log.info("[" + description.getName() + "] version [" + description.getVersion() + "] (" + codename + ")  loaded");
