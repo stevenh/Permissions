@@ -2,6 +2,7 @@ Changelog
 2.6
 Pulled in commits by rjr
 Fixed version as 2.5.5 should have been 2.6
+Fix for the invalid config file being written and erroneous conversion messages.
 
 2.5.5
 Updated to be compliant with CB600+

@@ -269,4 +269,30 @@ public class Misc {
         } catch (IOException ex) {
         }
     }
+    
+    /**
+     * Delete a file or folder quick and easy.  Will catch errors.
+     * 
+     * @param name
+     */
+    public void delete(String name) {
+    	File f = new File(name);
+    	
+    	if (!f.exists())
+    		throw new IllegalArgumentException("[Permissions] Delete: No such file/directory: " + name);
+    	
+    	if (!f.canWrite())
+    		throw new IllegalArgumentException("[Permissions] Delete: Write protected file: " + name);
+    	
+    	if (f.isDirectory()) {
+    		String[] files = f.list();
+    		if (files.length > 0)
+    			throw new IllegalArgumentException("[Permissions] Delete: Directory not empty: " + name);
+    	}
+    	
+    	boolean success = f.delete();
+    	
+    	if (!success)
+    		throw new IllegalArgumentException("[Permissions] Delete: Unable to delete file: " + name);
+    }
 }

@@ -6,17 +6,19 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.util.logging.Logger;
-import org.bukkit.Server;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.java.JavaPlugin;
+
 import org.bukkit.ChatColor;
+import org.bukkit.Server;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
+
 import com.nijiko.Messaging;
 import com.nijiko.Misc;
 import com.nijiko.configuration.ConfigurationHandler;
@@ -85,7 +87,7 @@ public class Permissions extends JavaPlugin {
         				FileChannel destination = null;
         				try {
         					source = new FileInputStream(new File("plugins" + File.separator + "Permissions", "world.yml")).getChannel();
-        					destination = new FileOutputStream(new File("plugins" + File.separator + "Permissions", DefaultWorld + ".yml")).getChannel();
+        					destination = new FileOutputStream(new File("plugins" + File.separator + "Permissions" + File.separator, DefaultWorld + ".yml")).getChannel();
         					destination.transferFrom(source, 0, source.size());
         				}
         				finally {
@@ -96,6 +98,7 @@ public class Permissions extends JavaPlugin {
         						destination.close();
         					}
         				}
+        				Misc.delete("plugins" + File.separator + "Permissions" + File.separator + "world.yml");
         			}
         		}
         		else if (new File("plugins" + File.separator + "Permissions", "config.yml").exists()) {
@@ -104,7 +107,7 @@ public class Permissions extends JavaPlugin {
         		
         			try {
         				source = new FileInputStream(new File("plugins" + File.separator + "Permissions", "config.yml")).getChannel();
-        				destination = new FileOutputStream(new File("plugins" + File.separator + "Permissions", DefaultWorld + ".yml")).getChannel();
+        				destination = new FileOutputStream(new File("plugins" + File.separator + "Permissions"  + File.separator, DefaultWorld + ".yml")).getChannel();
         				destination.transferFrom(source, 0, source.size());
         			}
         			finally {
@@ -115,9 +118,11 @@ public class Permissions extends JavaPlugin {
         					destination.close();
         				}
         			}
+        			Misc.delete("plugins" + File.separator + "Permissions" + File.separator + "config.yml");
         		}           
         	}
         	log.info("Invalid config file found and converted to proper name/format.");
+        	
         } catch (IOException e) {
         	e.printStackTrace();
         }
