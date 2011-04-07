@@ -1,7 +1,16 @@
 Changelog
-3.0
-Simplified versioning
-Implemented conversion system to attempt to circumvent loading issues
+2.6
+Pulled in commits by rjr
+Fixed version as 2.5.5 should have been 2.6
+
+2.5.5
+Updated to be compliant with CB600+
+Further Maven Integration and Autobuilding
+Better handling of configuration file errors.
+If you do not have a world config file for the default world at startup it will now look for config.yml
+If it cannot find that it will look for world.yml instead in case you named it that when that is not what is in level-name:
+It will rewrite the config file to be the proper name. At this time it does not delete the old one though.
+Removed defunct public abstract calls. If your not using the right one by now you should be shot anyway.
 
 2.5.4
 Added Command aliases for perms and pr
