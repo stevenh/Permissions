@@ -10,6 +10,7 @@
   	<url>https://github.com/TheYeti/Permissions/issues</url>
   </issueManagement>
   <build>
+      <finalName>Permissions</finalName>
       <plugins>
           <plugin>
               <groupId>org.apache.maven.plugins</groupId>
