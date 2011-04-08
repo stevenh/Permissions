@@ -98,19 +98,16 @@ public class Control extends PermissionHandler {
     }
     
     public void setDefaultWorld(String world) {
-        // log.info("Default world: " + world);
         this.defaultWorld = world;
     }
 
     public boolean loadWorld(String world) {
-        // log.info("Checking for the world: " + world);
         if(!this.Worlds.contains(world)) {
             this.load(world, new Configuration(new File(Permissions.instance.getDataFolder().getPath() + File.separator + world + ".yml")));
             log.info("Loaded world: " + world);
            return true;
         }
 
-        // log.info("World already exists: " + world);
         return false;
     }
     
@@ -140,25 +137,20 @@ public class Control extends PermissionHandler {
             FileManager file = new FileManager(Permissions.instance.getDataFolder().getPath() + File.separator, world + ".yml", true);
         }
 
-        // log.info("Configuration file: " + directory.getPath() + File.separator + world + ".yml");
 
         config.load();
 
-        // log.info("Loading world: " + world);
         this.Worlds.add(world);
         this.WorldConfiguration.put(world, config);
 
         if(!world.equals(this.defaultWorld)) {
-            // log.info("Checking for copying in world: " + directory.getPath() + world + ".yml");
             if(config.getString("plugin.permissions.copies", "") == null ? "" != null : !config.getString("plugin.permissions.copies", "").equals("")) {
-                // log.info("Copying exists for world: " + directory.getPath() + world + ".yml");
                 this.WorldInheritance.put(world, config.getString("plugin.permissions.copies", ""));
                 return;
             }
             
             if (!(new File(Permissions.instance.getDataFolder().getPath() + File.separator + world + ".yml").exists())) {
             	this.WorldInheritance.put(world, defaultWorld);
-            	//log.info("Copying the world" + this.directory + File.separator + world + ".yml");
             }
             
         }
@@ -186,8 +178,6 @@ public class Control extends PermissionHandler {
         // Group
         String group;
 
-        // log.info("Grabbing group keys for world: " + directory.getPath() + File.separator + world + ".yml");
-        // log.info("User keys for world: " + world + " - " + new ArrayList<String>(groupKeys).toString());
         if (groupKeys != null) {
             for (String key : groupKeys) {
                 Inheritance = new HashSet<String>();
@@ -213,11 +203,8 @@ public class Control extends PermissionHandler {
                     Permissions.addAll(permissions);
                 }
 
-                // log.info("Updating group data for world: " + directory.getPath() + File.separator + world + ".yml");
-                // log.info("Permissions For Group: " + key + " - " + new ArrayList<String>(Permissions).toString());
                 this.WorldGroups.get(world).put(key.toLowerCase(), Permissions);
                 this.WorldGroupsData.get(world).put(key.toLowerCase(), new Object[]{key, prefix, suffix, build});
-                // log.info("Updated group data for world: " + directory.getPath() + world + ".yml");
 
                 if (Inheritance.size() > 0) {
                    this.WorldGroupsInheritance.get(world).put(key.toLowerCase(), Inheritance);
@@ -225,8 +212,6 @@ public class Control extends PermissionHandler {
             }
         }
 
-        // log.info("Grabbing userkeys for world: " + directory.getPath() + File.separator + world + ".yml");
-        // log.info("User keys for world: " + world + " - " + new ArrayList<String>(userKeys).toString());
         if (userKeys != null) {
             for (String key : userKeys) {
                 Permissions = new HashSet<String>();
@@ -295,8 +280,6 @@ public class Control extends PermissionHandler {
         String name = player.getName().toLowerCase();
         String world = player.getWorld().getName();
 
-        // log.info("Checking inside world: " + world);
-
         // Fix to disable console users getting errors
         if (name == null && world == null)
         {
@@ -310,12 +293,9 @@ public class Control extends PermissionHandler {
             world = this.WorldInheritance.get(world);
 
             this.loadWorld(world);
-
-            // log.info("Checking inherited world: " + world);
         }
 
         if (this.WorldCache.get(world).containsKey(name + "," + permission)) {
-            // log.info("World contained cached node " + permission + ": " + world);
             return this.WorldCache.get(world).get(name + "," + permission);
         }
 
@@ -326,14 +306,9 @@ public class Control extends PermissionHandler {
         Map<String, Boolean> Cached = this.WorldCache.get(world);
         String base = this.WorldBase.get(world);
 
-        // log.info("Checking for the node " + permission + " in the world: " + world);
-
         if (this.WorldUserPermissions.get(world).containsKey(name)) {
             Permissions = UserPermissions.get(name);
             group = UserGroups.get(name).toLowerCase();
-
-            // log.info("User group:" + group);
-            // log.info("User Permissions: " + (new ArrayList<String>(Permissions)).toString());
 
             if (!Groups.isEmpty() || Groups != null) {
                 if (Groups.containsKey(group)) {
@@ -375,8 +350,6 @@ public class Control extends PermissionHandler {
         if (GroupInheritedPermissions.size() > 0) {
         	GroupPermissions.addAll(GroupInheritedPermissions);
         }
-
-        // log.info("Group Permissions: " + (new ArrayList<String>(GroupPermissions)).toString());
 
         if (Permissions == null || GroupPermissions == null) {
             Cached.put(name + "," + permission, false);
@@ -824,7 +797,6 @@ public class Control extends PermissionHandler {
         //MODIFICATION START
         Object[] groupData = this.WorldGroupsData.get(world).get(group);
         if(groupData == null) groupData = new Object[]{group,"","",true};
-//        if(groupData.length==4) return;
         if(data instanceof Boolean && node.equals("build")) groupData[3] = data;
         else if (data instanceof String)
         {
@@ -849,7 +821,6 @@ public class Control extends PermissionHandler {
         //MODIFICATION START
         Object[] groupData = this.WorldGroupsData.get(world).get(group);
         if(groupData == null) groupData = new Object[]{group,"","",true};
-//        if(groupData.length==4) return;
         if(node.equals("build")) groupData[3] = true;
         else if(node.equals("prefix")) groupData[1]= "";
         else if(node.equals("suffix")) groupData[2]= "";
@@ -1111,7 +1082,7 @@ public class Control extends PermissionHandler {
         double userPermission = this.getUserPermissionDouble(world, name, permission);
         double userGroupPermission = -1.0;
 
-        if (group != null /*|| !group.isEmpty()*/) {
+        if (group != null) {
             userGroupPermission = this.getGroupPermissionDouble(world, group, permission);
         }
 
