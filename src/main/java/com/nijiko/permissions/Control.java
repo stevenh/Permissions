@@ -757,6 +757,7 @@ public class Control extends PermissionHandler {
         if(groupPerms==null) groupPerms = new HashSet<String>();
         groupPerms.add(node);
         this.WorldGroups.get(world).put(group, groupPerms);
+        this.clearCache(world); //TODO: Use more efficient method to clear cache for affected users
         //MODIFICATION END
     }
     
@@ -781,6 +782,7 @@ public class Control extends PermissionHandler {
         if(groupPerms==null) groupPerms = new HashSet<String>();
         groupPerms.remove(node);
         this.WorldGroups.get(world).put(group, groupPerms);
+        this.clearCache(world); //TODO: Use more efficient method to clear cache for affected users
         //MODIFICATION END
     }
     
@@ -845,7 +847,8 @@ public class Control extends PermissionHandler {
         Set<String> userPerms = this.WorldUserPermissions.get(world).get(user);
         if(userPerms==null) userPerms = new HashSet<String>();
         userPerms.add(node);
-        this.WorldGroups.get(world).put(user, userPerms);
+        this.WorldUserPermissions.get(world).put(user, userPerms);
+        this.setCacheItem(world, user, node, true);
         //MODIFICATION END
     }
     
@@ -870,7 +873,8 @@ public class Control extends PermissionHandler {
         Set<String> userPerms = this.WorldUserPermissions.get(world).get(user);
         if(userPerms==null) userPerms = new HashSet<String>();
         userPerms.remove(node);
-        this.WorldGroups.get(world).put(user, userPerms);
+        this.WorldUserPermissions.get(world).put(user, userPerms);
+        this.setCacheItem(world, user, node, true);
         //MODIFICATION END
     }
     //End of fixes by rcjrrjcr
