@@ -6,12 +6,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.StringTokenizer;
 import java.util.logging.Logger;
 
 import org.bukkit.entity.Player;
@@ -76,8 +74,7 @@ public class Control extends PermissionHandler {
         Worlds = new LinkedList<String>();
         
         synchronized (w) {
-        	for (Iterator<String> it = w.iterator(); it.hasNext();) {
-        		String world = it.next();
+        	for (String world : w) {
         		this.forceLoadWorld(world);
         	}
         }
@@ -124,7 +121,7 @@ public class Control extends PermissionHandler {
     }
 
     public void load() {
-        if(this.defaultWorld == null ? "" != null : !this.defaultWorld.equals("")) {
+        if(this.defaultWorld == null || this.defaultWorld.equals("")) {
             return;
         }
 
@@ -144,7 +141,7 @@ public class Control extends PermissionHandler {
         this.WorldConfiguration.put(world, config);
 
         if(!world.equals(this.defaultWorld)) {
-            if(config.getString("plugin.permissions.copies", "") == null ? "" != null : !config.getString("plugin.permissions.copies", "").equals("")) {
+            if(!config.getString("plugin.permissions.copies", "").isEmpty()) {
                 this.WorldInheritance.put(world, config.getString("plugin.permissions.copies", ""));
                 return;
             }
@@ -191,7 +188,7 @@ public class Control extends PermissionHandler {
                 String suffix = config.getString("groups." + key + ".info.suffix", null);
                 boolean build = config.getBoolean("groups." + key + ".info.build", false);
 
-                if (Default && (this.WorldBase.get(world) == null ? "" == null : this.WorldBase.get(world).equals(""))) {
+                if (Default && ( (this.WorldBase.get(world)==null)||(this.WorldBase.get(world).isEmpty()) ) ) {
                     this.WorldBase.put(world, key.toLowerCase());
                 }
 
@@ -228,7 +225,7 @@ public class Control extends PermissionHandler {
                     this.WorldUserGroups.get(world).put(key.toLowerCase(), this.WorldBase.get(world));
                 }
 
-                if (permissions.size() > 0) {
+                if (permissions!=null && permissions.size() > 0) {
                     Permissions.addAll(permissions);
                 }
 
@@ -271,8 +268,7 @@ public class Control extends PermissionHandler {
      * @param permission
      * @return boolean
      */
-    @SuppressWarnings("unused")
-	public boolean permission(Player player, String permission) {
+    public boolean permission(Player player, String permission) {
         Set<String> Permissions = new HashSet<String>();
         Set<String> GroupPermissions = new HashSet<String>();
         Set<String> GroupInheritedPermissions = new HashSet<String>();
@@ -310,7 +306,7 @@ public class Control extends PermissionHandler {
             Permissions = UserPermissions.get(name);
             group = UserGroups.get(name).toLowerCase();
 
-            if (!Groups.isEmpty() || Groups != null) {
+            if ( Groups != null && !Groups.isEmpty()) {
                 if (Groups.containsKey(group)) {
                     GroupPermissions = Groups.get(group);
                 }
@@ -324,14 +320,14 @@ public class Control extends PermissionHandler {
             }
 
         } else {
-            if ((base == null ? "" == null : base.equals(""))) {
+            if (base == null || base.isEmpty()) {
                 Cached.put(name + "," + permission, false);
                 return false;
             }
 
-            group = ((String) base).toLowerCase();
+            group = base.toLowerCase();
 
-            if (!Groups.isEmpty() || Groups != null) {
+            if (Groups != null && !Groups.isEmpty()) {
                 if (Groups.containsKey(group)) {
                     GroupPermissions = Groups.get(group);
                 }
@@ -345,7 +341,7 @@ public class Control extends PermissionHandler {
             }
         }
 
-        StringTokenizer globalized = new StringTokenizer(permission, ".");
+        String[] nodeHierachy = permission.split("\\.");
 
         if (GroupInheritedPermissions.size() > 0) {
         	GroupPermissions.addAll(GroupInheritedPermissions);
@@ -374,15 +370,23 @@ public class Control extends PermissionHandler {
         if (permission.contains(".")) {
             String setting = "";
             String node = "";
+            String negatedNode = "";
 
-            while (globalized.hasMoreElements()) {
-                setting += (String) globalized.nextToken() + ".";
+            for (String nextLevel : nodeHierachy) {
+                setting += nextLevel + ".";
                 node = setting + "*";
+                negatedNode = "-" + node;
 
                 if (GroupPermissions.contains(node) || Permissions.contains(node)) {
                     Cached.put(name + "," + permission, true);
                     return true;
-                } else {
+                } 
+                else if(GroupPermissions.contains(negatedNode) || Permissions.contains(negatedNode))
+                {
+                    Cached.put(name + "," + permission, false);
+                    return false;                    
+                }
+                else {
                     continue;
                 }
             }
@@ -396,15 +400,11 @@ public class Control extends PermissionHandler {
         if (this.WorldGroupsInheritance.containsKey(world)) {
             Map<String, Set<String>> WorldGroupInheritance = this.WorldGroupsInheritance.get(world);
 
-            if(WorldGroupInheritance.containsKey(group)) {
-                if (WorldGroupInheritance.size() > 0) {
-                    return WorldGroupInheritance.get(group);
-                } else {
-                    return new HashSet<String>();
+            if (WorldGroupInheritance.size() > 0) {
+                if(WorldGroupInheritance.containsKey(group.toLowerCase())) {
+                    return WorldGroupInheritance.get(group.toLowerCase());
                 }
             }
-
-            return new HashSet<String>();
         }
 
         return new HashSet<String>();
@@ -798,14 +798,14 @@ public class Control extends PermissionHandler {
         this.WorldConfiguration.get(world).setProperty("groups." + group + ".info." + node, data);
         //MODIFICATION START
         Object[] groupData = this.WorldGroupsData.get(world).get(group);
-        if(groupData == null) groupData = new Object[]{group,"","",true};
+        if(groupData == null) groupData = new Object[]{group,"","",false};
         if(data instanceof Boolean && node.equals("build")) groupData[3] = data;
         else if (data instanceof String)
         {
         	if(node.equals("prefix")) groupData[1]= data;
         	else if(node.equals("suffix")) groupData[2]= data;
         }
-        this.WorldGroupsData.get(world).put(group, groupData);
+        this.WorldGroupsData.get(world).put(group.toLowerCase(), groupData);
         //MODIFICATION END
     }
     
@@ -822,11 +822,11 @@ public class Control extends PermissionHandler {
         
         //MODIFICATION START
         Object[] groupData = this.WorldGroupsData.get(world).get(group);
-        if(groupData == null) groupData = new Object[]{group,"","",true};
-        if(node.equals("build")) groupData[3] = true;
+        if(groupData == null) groupData = new Object[]{group,"","",false};
+        if(node.equals("build")) groupData[3] = false;
         else if(node.equals("prefix")) groupData[1]= "";
         else if(node.equals("suffix")) groupData[2]= "";
-        this.WorldGroupsData.get(world).put(group, groupData);
+        this.WorldGroupsData.get(world).put(group.toLowerCase(), groupData);
         //MODIFICATION END
     }
     
@@ -911,8 +911,7 @@ public class Control extends PermissionHandler {
             this.loadWorld(world);
         }
 
-        return (this.WorldConfiguration.get(world).getString("groups." + group + ".info." + permission) == null)
-                ? "" : this.WorldConfiguration.get(world).getString("groups." + group + ".info." + permission);
+        return this.WorldConfiguration.get(world).getString("groups." + group + ".info." + permission, "");
     }
     
     public int getGroupPermissionInteger(String world, String group, String permission) {
@@ -960,8 +959,7 @@ public class Control extends PermissionHandler {
             this.loadWorld(world);
         }
 
-        return (this.WorldConfiguration.get(world).getString("users." + name + ".info." + permission) == null)
-                ? "" : this.WorldConfiguration.get(world).getString("users." + name + ".info." + permission);
+        return this.WorldConfiguration.get(world).getString("users." + name + ".info." + permission,"");
     }
     
     public int getUserPermissionInteger(String world, String name, String permission) {
