@@ -133,14 +133,15 @@ public class Permissions extends JavaPlugin {
         // Gogo
         this.config = new ConfigurationHandler(configure);
 
-        // Setup Permission
-        setupPermissions();
+        instance = this;
 
         // Enabled
         log.info("[Permissions] (" + codename + ") was Initialized.");
     }
     
     public void onLoad() {
+        // Setup Permission
+        setupPermissions();
     }
 
     public void onDisable() {
@@ -173,7 +174,6 @@ public class Permissions extends JavaPlugin {
     }
 
     public void onEnable() {
-    	instance = this;
     	Server = this.getServer();
     	description = this.getDescription();
     	directory = getDataFolder();

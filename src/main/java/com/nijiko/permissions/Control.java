@@ -377,14 +377,14 @@ public class Control extends PermissionHandler {
                 node = setting + "*";
                 negatedNode = "-" + node;
 
-                if (GroupPermissions.contains(node) || Permissions.contains(node)) {
-                    Cached.put(name + "," + permission, true);
-                    return true;
-                } 
-                else if(GroupPermissions.contains(negatedNode) || Permissions.contains(negatedNode))
+                if(GroupPermissions.contains(negatedNode) || Permissions.contains(negatedNode))
                 {
                     Cached.put(name + "," + permission, false);
                     return false;                    
+                }
+                else if (GroupPermissions.contains(node) || Permissions.contains(node)) {
+                    Cached.put(name + "," + permission, true);
+                    return true;
                 }
                 else {
                     continue;
