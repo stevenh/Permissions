@@ -23,6 +23,7 @@ import com.nijiko.Messaging;
 import com.nijiko.Misc;
 import com.nijiko.configuration.ConfigurationHandler;
 import com.nijiko.configuration.DefaultConfiguration;
+import com.nijiko.configuration.NotNullConfiguration;
 import com.nijiko.permissions.Control;
 import com.nijiko.permissions.PermissionHandler;
 
@@ -127,7 +128,7 @@ public class Permissions extends JavaPlugin {
         	e.printStackTrace();
         }
 
-        Configuration configure = new Configuration(new File("plugins" + File.separator + "Permissions", DefaultWorld + ".yml"));
+        Configuration configure = new NotNullConfiguration(new File("plugins" + File.separator + "Permissions", DefaultWorld + ".yml"));
         configure.load();
 
         // Gogo
@@ -168,7 +169,7 @@ public class Permissions extends JavaPlugin {
     }
 
     public void setupPermissions() {
-        Security = new Control(new Configuration(new File("plugins" + File.separator + "Permissions", DefaultWorld + ".yml")));
+        Security = new Control(new NotNullConfiguration(new File("plugins" + File.separator + "Permissions", DefaultWorld + ".yml")));
         Security.setDefaultWorld(DefaultWorld);
         Security.load();
     }
