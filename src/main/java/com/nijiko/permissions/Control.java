@@ -51,6 +51,7 @@ public class Control extends PermissionHandler {
 
     private List<String> Worlds = new LinkedList<String>();
     private Map<String, Configuration> WorldConfiguration = new HashMap<String, Configuration>();
+    private Set<String> WorldConfigurationModification = new HashSet<String>();
     private Map<String, String> WorldBase = new HashMap<String, String>();
     private Map<String, String> WorldInheritance = new HashMap<String, String>();
     private Map<String, Map<String, Set<String>>> WorldUserPermissions = new HashMap<String, Map<String, Set<String>>>();
@@ -753,8 +754,9 @@ public class Control extends PermissionHandler {
         List<String> list = this.WorldConfiguration.get(world).getStringList("groups." + group + ".permissions", new LinkedList<String>());
         list.add(node);
         this.WorldConfiguration.get(world).setProperty("groups." + group + ".permissions", list);
+        this.WorldConfigurationModification.add(world);
         //MODIFICATION START
-        Set<String> groupPerms = this.WorldGroups.get(world).get(group);
+        Set<String> groupPerms = this.WorldGroups.get(world).get(group.toLowerCase());
         if(groupPerms==null) groupPerms = new HashSet<String>();
         groupPerms.add(node);
         this.WorldGroups.get(world).put(group, groupPerms);
@@ -778,8 +780,9 @@ public class Control extends PermissionHandler {
         }
         
         this.WorldConfiguration.get(world).setProperty("groups." + group + ".permissions", list);
+        this.WorldConfigurationModification.add(world);
         //MODIFICATION START
-        Set<String> groupPerms = this.WorldGroups.get(world).get(group);
+        Set<String> groupPerms = this.WorldGroups.get(world).get(group.toLowerCase());
         if(groupPerms==null) groupPerms = new HashSet<String>();
         groupPerms.remove(node);
         this.WorldGroups.get(world).put(group, groupPerms);
@@ -797,8 +800,9 @@ public class Control extends PermissionHandler {
         }
 
         this.WorldConfiguration.get(world).setProperty("groups." + group + ".info." + node, data);
+        this.WorldConfigurationModification.add(world);
         //MODIFICATION START
-        Object[] groupData = this.WorldGroupsData.get(world).get(group);
+        Object[] groupData = this.WorldGroupsData.get(world).get(group.toLowerCase());
         if(groupData == null) groupData = new Object[]{group,"","",false};
         if(data instanceof Boolean && node.equals("build")) groupData[3] = data;
         else if (data instanceof String)
@@ -820,9 +824,10 @@ public class Control extends PermissionHandler {
         }
 
         this.WorldConfiguration.get(world).removeProperty("groups." + group + ".info." + node);
+        this.WorldConfigurationModification.add(world);
         
         //MODIFICATION START
-        Object[] groupData = this.WorldGroupsData.get(world).get(group);
+        Object[] groupData = this.WorldGroupsData.get(world).get(group.toLowerCase());
         if(groupData == null) groupData = new Object[]{group,"","",false};
         if(node.equals("build")) groupData[3] = false;
         else if(node.equals("prefix")) groupData[1]= "";
@@ -843,13 +848,14 @@ public class Control extends PermissionHandler {
         List<String> list = this.WorldConfiguration.get(world).getStringList("users." + user + ".permissions", new LinkedList<String>());
         list.add(node);		
         this.WorldConfiguration.get(world).setProperty("users." + user + ".permissions", list);
+        this.WorldConfigurationModification.add(world);
         
         //MODIFICATION START
-        Set<String> userPerms = this.WorldUserPermissions.get(world).get(user);
+        Set<String> userPerms = this.WorldUserPermissions.get(world).get(user.toLowerCase());
         if(userPerms==null) userPerms = new HashSet<String>();
         userPerms.add(node);
-        this.WorldUserPermissions.get(world).put(user, userPerms);
-        this.setCacheItem(world, user, node, true);
+        this.WorldUserPermissions.get(world).put(user.toLowerCase(), userPerms);
+        this.setCacheItem(world, user.toLowerCase(), node, true);
         //MODIFICATION END
     }
     
@@ -869,13 +875,14 @@ public class Control extends PermissionHandler {
         }
         
         this.WorldConfiguration.get(world).setProperty("users." + user + ".permissions", list);
+        this.WorldConfigurationModification.add(world);
         
         //MODIFICATION START
-        Set<String> userPerms = this.WorldUserPermissions.get(world).get(user);
+        Set<String> userPerms = this.WorldUserPermissions.get(world).get(user.toLowerCase());
         if(userPerms==null) userPerms = new HashSet<String>();
         userPerms.remove(node);
-        this.WorldUserPermissions.get(world).put(user, userPerms);
-        this.setCacheItem(world, user, node, true);
+        this.WorldUserPermissions.get(world).put(user.toLowerCase(), userPerms);
+        this.setCacheItem(world, user.toLowerCase(), node, true);
         //MODIFICATION END
     }
     //End of fixes by rcjrrjcr
@@ -889,6 +896,7 @@ public class Control extends PermissionHandler {
         }
 
         this.WorldConfiguration.get(world).setProperty("users." + user + ".info." + node, data);
+        this.WorldConfigurationModification.add(world);
     }
     
     public void removeUserInfo(String world, String user, String node) {
@@ -901,6 +909,7 @@ public class Control extends PermissionHandler {
         }
 
         this.WorldConfiguration.get(world).removeProperty("users." + user + ".info." + node);
+        this.WorldConfigurationModification.add(world);
     }
     
     public String getGroupPermissionString(String world, String group, String permission) {
@@ -1105,9 +1114,9 @@ public class Control extends PermissionHandler {
 
 	@Override
 	public void saveAll() {
-		for(Configuration worldConfig : this.WorldConfiguration.values())
+		for(String world : this.WorldConfigurationModification)
 		{
-			worldConfig.save();
+			if(this.WorldConfiguration.containsKey(world)) this.WorldConfiguration.get(world).save();
 		}
 	}
 	//End of addition by rcjrrjcr

@@ -41,18 +41,15 @@ public class Listener extends BlockListener {
         
         world = player.getWorld();
 		String[] groups = Permissions.Security.getGroups(world.getName(), player.getName());
-		int build = 0;
 		
 		for (String group : groups) {
-			if (!Permissions.Security.canGroupBuild(world.getName(), group)) {
-				build++;
+			if (Permissions.Security.canGroupBuild(world.getName(), group)) {
+				return;
 			}
 		}
-		
-		if (build == groups.length) {
-			event.setBuild(false);
-			return;
-		}
+
+		event.setBuild(false);
+		return;
 	}
 	
 	@Override
@@ -62,17 +59,14 @@ public class Listener extends BlockListener {
         
         world = player.getWorld();
 		String[] groups = Permissions.Security.getGroups(world.getName(), player.getName());
-		int build = 0;
 		
 		for (String group : groups) {
-			if (!Permissions.Security.canGroupBuild(world.getName(), group)) {
-				build++;
+			if (Permissions.Security.canGroupBuild(world.getName(), group)) {
+				return;
 			}
 		}
-		
-		if (build == groups.length) {
-			event.setCancelled(true);
-			return;
-		}
+
+		event.setCancelled(true);
+		return;
 	}
 }
