@@ -372,19 +372,12 @@ public class Control extends PermissionHandler {
         if (permission.contains(".")) {
             String setting = "";
             String node = "";
-            String negatedNode = "";
 
             for (String nextLevel : nodeHierachy) {
                 setting += nextLevel + ".";
                 node = setting + "*";
-                negatedNode = "-" + node;
 
-                if(GroupPermissions.contains(negatedNode) || Permissions.contains(negatedNode))
-                {
-                    Cached.put(name + "," + permission, false);
-                    return false;                    
-                }
-                else if (GroupPermissions.contains(node) || Permissions.contains(node)) {
+                if (GroupPermissions.contains(node) || Permissions.contains(node)) {
                     Cached.put(name + "," + permission, true);
                     return true;
                 }
