@@ -1,4 +1,11 @@
 Changelog
+2.7
+Further commits by rcjrrjcr
+ - Removed negatedNode checks
+ - Temp fix for NULL issue
+ - WorldConfigurationModification to save only modified configs
+ - Fix for cache problems
+ 
 2.6
 Pulled in commits by rjr
 Fixed version as 2.5.5 should have been 2.6
