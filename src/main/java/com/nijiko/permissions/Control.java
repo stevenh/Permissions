@@ -875,7 +875,7 @@ public class Control extends PermissionHandler {
         if(userPerms==null) userPerms = new HashSet<String>();
         userPerms.remove(node);
         this.WorldUserPermissions.get(world).put(user.toLowerCase(), userPerms);
-        this.setCacheItem(world, user.toLowerCase(), node, true);
+        this.setCacheItem(world, user.toLowerCase(), node, false);
         //MODIFICATION END
     }
     //End of fixes by rcjrrjcr
