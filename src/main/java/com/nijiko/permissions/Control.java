@@ -534,14 +534,15 @@ public class Control extends PermissionHandler {
 
         if (this.WorldUserPermissions.get(world).containsKey(name) && this.WorldUserGroups.get(world).containsKey(name)) {
             String group = (String) ((Object[]) this.WorldGroupsData.get(world).get(this.WorldUserGroups.get(world).get(name).toLowerCase()))[0];
-            return (group == null) ? null : group;
-        } else {
-            if (this.WorldBase.get(world).equals("")) {
-                return null;
-            } else {
-                String group = (String) ((Object[]) this.WorldGroupsData.get(world).get(this.WorldBase.get(world)))[0];
-                return (group == null) ? null : group;
+            if (group != null) {
+                return group;
             }
+        }
+        if (this.WorldBase.get(world).equals("")) {
+            return null;
+        } else {
+            String group = (String) ((Object[]) this.WorldGroupsData.get(world).get(this.WorldBase.get(world)))[0];
+            return (group == null) ? null : group;
         }
     }
 
