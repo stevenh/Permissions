@@ -298,7 +298,6 @@ public class Control extends PermissionHandler {
         }
 
         Map<String, Set<String>> UserPermissions = this.WorldUserPermissions.get(world);
-        Map<String, String> UserGroups = this.WorldUserGroups.get(world);
         Map<String, Set<String>> Groups = this.WorldGroups.get(world);
         Map<String, Set<String>> GroupsInheritance = this.WorldGroupsInheritance.get(world);
         Map<String, Boolean> Cached = this.WorldCache.get(world);
@@ -306,7 +305,7 @@ public class Control extends PermissionHandler {
 
         if (this.WorldUserPermissions.get(world).containsKey(name)) {
             Permissions = UserPermissions.get(name);
-            group = UserGroups.get(name).toLowerCase();
+            group = getGroup(world, name);
 
             if ( Groups != null && !Groups.isEmpty()) {
                 if (Groups.containsKey(group)) {
