@@ -1,4 +1,6 @@
 Changelog
+2.7.2
+Fixed extremely subtle lowercase bug caused by DThielke's commits.
 2.7.1
 Bug fix by DThielke for Programmatic Permissions modification
  - removeUserPermission properly sets cached value to false
