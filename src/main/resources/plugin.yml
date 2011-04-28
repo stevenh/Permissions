@@ -4,6 +4,7 @@ version: 2.7.1
 author:
   - TheNo1Yeti
   - rcjrrjcr
+  - Nijikokun
 website: www.theyeticave.net
 description: >
              Provides a Permissions framework for use with Bukkit Plugins
