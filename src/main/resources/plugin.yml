@@ -1,7 +1,9 @@
 name: Permissions
 main: com.nijikokun.bukkit.Permissions.Permissions
-version: 2.7
-author: TheNo1Yeti
+version: 2.7.1
+author:
+  - TheNo1Yeti
+  - rcjrrjcr
 website: www.theyeticave.net
 description: >
              Provides a Permissions framework for use with Bukkit Plugins

@@ -1,4 +1,9 @@
 Changelog
+2.7.1
+Bug fix by DThielke for Programmatic Permissions modification
+ - removeUserPermission properly sets cached value to false
+ - Users not explicitely defined now properly return default group
+ - Small change to player group fetching in permission()
 2.7
 Further commits by rcjrrjcr
  - Removed negatedNode checks
