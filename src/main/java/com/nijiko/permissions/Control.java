@@ -298,7 +298,6 @@ public class Control extends PermissionHandler {
         }
 
         Map<String, Set<String>> UserPermissions = this.WorldUserPermissions.get(world);
-        Map<String, String> UserGroups = this.WorldUserGroups.get(world);
         Map<String, Set<String>> Groups = this.WorldGroups.get(world);
         Map<String, Set<String>> GroupsInheritance = this.WorldGroupsInheritance.get(world);
         Map<String, Boolean> Cached = this.WorldCache.get(world);
@@ -306,7 +305,7 @@ public class Control extends PermissionHandler {
 
         if (this.WorldUserPermissions.get(world).containsKey(name)) {
             Permissions = UserPermissions.get(name);
-            group = UserGroups.get(name).toLowerCase();
+            group = getGroup(world, name);
 
             if ( Groups != null && !Groups.isEmpty()) {
                 if (Groups.containsKey(group)) {
@@ -534,14 +533,15 @@ public class Control extends PermissionHandler {
 
         if (this.WorldUserPermissions.get(world).containsKey(name) && this.WorldUserGroups.get(world).containsKey(name)) {
             String group = (String) ((Object[]) this.WorldGroupsData.get(world).get(this.WorldUserGroups.get(world).get(name).toLowerCase()))[0];
-            return (group == null) ? null : group;
-        } else {
-            if (this.WorldBase.get(world).equals("")) {
-                return null;
-            } else {
-                String group = (String) ((Object[]) this.WorldGroupsData.get(world).get(this.WorldBase.get(world)))[0];
-                return (group == null) ? null : group;
+            if (group != null) {
+                return group;
             }
+        }
+        if (this.WorldBase.get(world).equals("")) {
+            return null;
+        } else {
+            String group = (String) ((Object[]) this.WorldGroupsData.get(world).get(this.WorldBase.get(world)))[0];
+            return (group == null) ? null : group;
         }
     }
 
@@ -875,7 +875,7 @@ public class Control extends PermissionHandler {
         if(userPerms==null) userPerms = new HashSet<String>();
         userPerms.remove(node);
         this.WorldUserPermissions.get(world).put(user.toLowerCase(), userPerms);
-        this.setCacheItem(world, user.toLowerCase(), node, true);
+        this.setCacheItem(world, user.toLowerCase(), node, false);
         //MODIFICATION END
     }
     //End of fixes by rcjrrjcr
