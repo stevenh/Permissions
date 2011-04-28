@@ -305,7 +305,7 @@ public class Control extends PermissionHandler {
 
         if (this.WorldUserPermissions.get(world).containsKey(name)) {
             Permissions = UserPermissions.get(name);
-            group = getGroup(world, name);
+            group = getGroup(world, name).toLowerCase();
 
             if ( Groups != null && !Groups.isEmpty()) {
                 if (Groups.containsKey(group)) {
