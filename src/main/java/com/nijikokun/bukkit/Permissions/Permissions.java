@@ -55,7 +55,7 @@ public class Permissions extends JavaPlugin {
     public File directory;
     private DefaultConfiguration config;
     public static String name = "Permissions";
-    public static String version = "2.7.1";
+    public static String version = "2.7.2";
     public static String codename = "Phoenix";
     
     
