@@ -187,9 +187,9 @@ public class Permissions extends JavaPlugin {
         DefaultWorld = server.getString("level-name");
 
         // Attempt
-        if (!(new File(getDataFolder(), DefaultWorld + ".yml").exists())) {
-            com.nijiko.Misc.touch(getDataFolder() + DefaultWorld + ".yml");
-        }
+//        if (!(new File(getDataFolder(), DefaultWorld + ".yml").exists())) {
+//            com.nijiko.Misc.touch(getDataFolder() + File.separator + DefaultWorld + ".yml");
+//        }
 
         // Gogo
         this.config = new ConfigurationHandler(getConfiguration());
