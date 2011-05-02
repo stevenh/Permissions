@@ -1,4 +1,6 @@
 Changelog
+2.7.3
+Fixed negate node add/remove bug.
 2.7.2
 Fixed extremely subtle lowercase bug caused by DThielke's commits.
 2.7.1
