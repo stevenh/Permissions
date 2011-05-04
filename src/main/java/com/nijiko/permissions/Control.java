@@ -848,9 +848,10 @@ public class Control extends PermissionHandler {
         if(userPerms==null) userPerms = new HashSet<String>();
         userPerms.add(node);
         this.WorldUserPermissions.get(world).put(user.toLowerCase(), userPerms);
-        boolean negated = node.startsWith("-");
-        String actualNode =  negated ? node.substring(1) : node;
-        this.setCacheItem(world, user.toLowerCase(), actualNode, !negated);
+//        boolean negated = node.startsWith("-");
+//        String actualNode =  negated ? node.substring(1) : node;
+//        this.setCacheItem(world, user.toLowerCase(), actualNode, !negated);
+        this.removeCachedItem(world, user.toLowerCase(), node);
         //MODIFICATION END
     }
     
@@ -877,9 +878,10 @@ public class Control extends PermissionHandler {
         if(userPerms==null) userPerms = new HashSet<String>();
         userPerms.remove(node);
         this.WorldUserPermissions.get(world).put(user.toLowerCase(), userPerms);
-        boolean negated = node.startsWith("-");
-        String actualNode =  negated ? node.substring(1) : node;
-        this.setCacheItem(world, user.toLowerCase(), actualNode, negated);
+//        boolean negated = node.startsWith("-");
+//        String actualNode =  negated ? node.substring(1) : node;
+//        this.setCacheItem(world, user.toLowerCase(), actualNode, negated);
+        this.removeCachedItem(world, user.toLowerCase(), node);
         //MODIFICATION END
     }
     //End of fixes by rcjrrjcr
