@@ -1,5 +1,5 @@
 Permissions... Done right.
-Permissions allows plugin-authors to utalize a permission system that handles 
+Permissions allows plugin-authors to utilize a permission system that handles 
 group inheritance, globalized permission settings, and more. All the features 
 of a fine-grained permission system in one plugin.
 
@@ -7,7 +7,7 @@ This is a continuation of the work that was originally done by Nijikokun.  All
 original credit goes to them as without their work this plugin would not have
 been possible.
 
-Features
+Features:
 Groups
 Group Inheritance, Allows for groups to gain permissions from other groups.
 User Permission System
