@@ -81,7 +81,8 @@ public abstract class PermissionHandler {
      */
     public abstract boolean permission(Player player, String permission);
 
-    
+    public abstract boolean has(String worldName, String playerName, String permission);
+    public abstract boolean permission(String worldName, String playerName, String permission);
     /**
      * Grabs group name.
      * <br /><br />

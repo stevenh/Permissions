@@ -252,34 +252,23 @@ public class Control extends PermissionHandler {
     public boolean has(Player player, String permission) {
         return this.permission(player, permission);
     }
+    public boolean has(String world, String playerName, String permission) {
+        return permission(world, playerName, permission);
+    }
 
-    /**
-     * Checks to see if a player has permission to a specific tree node.
-     * <br /><br />
-     * Example usage:
-     * <blockquote><pre>
-     * boolean canReload = Plugin.Permissions.Security.permission(player, "permission.reload");
-     * if(canReload) {
-     *	System.out.println("The user can reload!");
-     * } else {
-     *	System.out.println("The user has no such permission!");
-     * }
-     * </pre></blockquote>
-     *
-     * @param player
-     * @param permission
-     * @return boolean
-     */
     public boolean permission(Player player, String permission) {
+        return permission( player.getWorld().getName(), player.getName(), permission);
+    }
+    public boolean permission(String world, String playerName, String permission) {
         Set<String> Permissions = new HashSet<String>();
         Set<String> GroupPermissions = new HashSet<String>();
         Set<String> GroupInheritedPermissions = new HashSet<String>();
         String group = "";
-        String name = player.getName().toLowerCase();
-        String world = player.getWorld().getName();
+        playerName = playerName.toLowerCase();
+        world = world.toLowerCase();
 
         // Fix to disable console users getting errors
-        if (name == null && world == null)
+        if (playerName == null && world == null)
         {
         	return true;
         }
@@ -293,8 +282,8 @@ public class Control extends PermissionHandler {
             this.loadWorld(world);
         }
 
-        if (this.WorldCache.get(world).containsKey(name + "," + permission)) {
-            return this.WorldCache.get(world).get(name + "," + permission);
+        if (this.WorldCache.get(world).containsKey(playerName + "," + permission)) {
+            return this.WorldCache.get(world).get(playerName + "," + permission);
         }
 
         Map<String, Set<String>> UserPermissions = this.WorldUserPermissions.get(world);
@@ -303,9 +292,9 @@ public class Control extends PermissionHandler {
         Map<String, Boolean> Cached = this.WorldCache.get(world);
         String base = this.WorldBase.get(world);
 
-        if (this.WorldUserPermissions.get(world).containsKey(name)) {
-            Permissions = UserPermissions.get(name);
-            group = getGroup(world, name).toLowerCase();
+        if (this.WorldUserPermissions.get(world).containsKey(playerName)) {
+            Permissions = UserPermissions.get(playerName);
+            group = getGroup(world, playerName).toLowerCase();
 
             if ( Groups != null && !Groups.isEmpty()) {
                 if (Groups.containsKey(group)) {
@@ -316,13 +305,13 @@ public class Control extends PermissionHandler {
                     GroupInheritedPermissions = getInheritancePermissions(world, group);
                 }
             } else {
-                Cached.put(name + "," + permission, false);
+                Cached.put(playerName + "," + permission, false);
                 return false;
             }
 
         } else {
             if (base == null || base.isEmpty()) {
-                Cached.put(name + "," + permission, false);
+                Cached.put(playerName + "," + permission, false);
                 return false;
             }
 
@@ -337,7 +326,7 @@ public class Control extends PermissionHandler {
                     GroupInheritedPermissions = getInheritancePermissions(world, group);
                 }
             } else {
-                Cached.put(name + "," + permission, false);
+                Cached.put(playerName + "," + permission, false);
                 return false;
             }
         }
@@ -349,22 +338,22 @@ public class Control extends PermissionHandler {
         }
 
         if (Permissions == null || GroupPermissions == null) {
-            Cached.put(name + "," + permission, false);
+            Cached.put(playerName + "," + permission, false);
             return false;
         }
 
         if(GroupPermissions.contains("-" + permission) || Permissions.contains("-" + permission)) {
-            Cached.put(name + "," + permission, false);
+            Cached.put(playerName + "," + permission, false);
             return false;
         }
 
         if (GroupPermissions.contains("*") || Permissions.contains("*")) {
-            Cached.put(name + "," + permission, true);
+            Cached.put(playerName + "," + permission, true);
             return true;
         }
 
         if (GroupPermissions.contains(permission) || Permissions.contains(permission)) {
-            Cached.put(name + "," + permission, true);
+            Cached.put(playerName + "," + permission, true);
             return true;
         }
 
@@ -377,7 +366,7 @@ public class Control extends PermissionHandler {
                 node = setting + "*";
 
                 if (GroupPermissions.contains(node) || Permissions.contains(node)) {
-                    Cached.put(name + "," + permission, true);
+                    Cached.put(playerName + "," + permission, true);
                     return true;
                 }
                 else {
@@ -386,7 +375,7 @@ public class Control extends PermissionHandler {
             }
         }
 
-        Cached.put(name + "," + permission, false);
+        Cached.put(playerName + "," + permission, false);
         return false;
     }
 

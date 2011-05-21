@@ -1,4 +1,6 @@
 Changelog
+2.7.4
+Added overload of has() and permission() for plugin devs.
 2.7.3
 Fixed negate node add/remove bug.
 2.7.2
