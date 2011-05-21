@@ -62,6 +62,8 @@ public abstract class PermissionHandler {
      */
     public abstract boolean has(Player player, String permission);
 
+    public abstract boolean has(String worldName, String playerName, String permission);
+    
     /**
      * Checks to see if a player has permission to a specific tree node.
      * <br /><br />
@@ -81,8 +83,8 @@ public abstract class PermissionHandler {
      */
     public abstract boolean permission(Player player, String permission);
 
-    public abstract boolean has(String worldName, String playerName, String permission);
     public abstract boolean permission(String worldName, String playerName, String permission);
+    
     /**
      * Grabs group name.
      * <br /><br />
@@ -93,7 +95,6 @@ public abstract class PermissionHandler {
      */
     public abstract String getGroup(String world, String name);
 
-    
     /**
      * Grabs users groups.
      * <br /><br />

@@ -252,6 +252,7 @@ public class Control extends PermissionHandler {
     public boolean has(Player player, String permission) {
         return this.permission(player, permission);
     }
+    
     public boolean has(String world, String playerName, String permission) {
         return permission(world, playerName, permission);
     }
@@ -259,6 +260,7 @@ public class Control extends PermissionHandler {
     public boolean permission(Player player, String permission) {
         return permission( player.getWorld().getName(), player.getName(), permission);
     }
+    
     public boolean permission(String world, String playerName, String permission) {
         Set<String> Permissions = new HashSet<String>();
         Set<String> GroupPermissions = new HashSet<String>();

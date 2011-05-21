@@ -14,14 +14,18 @@
       </includes>
     </fileSet>
     <fileSet>
-    	<directory>${project.basedir}/Permissions/</directory>
-    	<outputDirectory>/Permissions/</outputDirectory>
-    	<includes>
-    		<include>RENAME-ME.yml</include></includes></fileSet>
+        <directory>${project.basedir}/src/main/resources/</directory>
+        <outputDirectory>/Permissions/</outputDirectory>
+        <includes>
+            <include>RENAME-ME.yml</include>
+        </includes>
+    </fileSet>
   </fileSets>
   <files>
-  	<file>
-  		<source>${project.build.directory}/${artifactId}.jar</source>
-  		<outputDirectory>/</outputDirectory>
-  		<destName>Permissions.jar</destName></file></files>
+    <file>
+        <source>${project.build.directory}/${artifactId}.jar</source>
+        <outputDirectory>/</outputDirectory>
+        <destName>Permissions.jar</destName>
+    </file>
+  </files>
 </assembly>
