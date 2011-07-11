@@ -203,9 +203,9 @@ public class Permissions extends JavaPlugin {
 
         // Enabled
         PluginManager pluginManager = this.getServer().getPluginManager();
-        pluginManager.registerEvent(Event.Type.BLOCK_PLACED, blockListener, Priority.High, this);
+        pluginManager.registerEvent(Event.Type.BLOCK_PLACE, blockListener, Priority.High, this);
         pluginManager.registerEvent(Event.Type.BLOCK_BREAK, blockListener, Priority.High, this);
-        pluginManager.registerEvent(Event.Type.WORLD_LOADED, worldListener, Priority.High, this);
+        pluginManager.registerEvent(Event.Type.WORLD_LOAD, worldListener, Priority.High, this);
 
         this.info("v" + description.getVersion() + " (" + codename + ") enabled");
     }
